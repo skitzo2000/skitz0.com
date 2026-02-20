@@ -1,0 +1,42 @@
+---
+import type { Project } from '../data/site';
+import ProjectCard from './ProjectCard.astro';
+
+interface Props {
+  projects: Project[];
+  revealIndex?: number;
+}
+
+const { projects, revealIndex = 1 } = Astro.props;
+---
+
+<section class="projects" aria-labelledby="projects-heading" data-reveal data-reveal-index={revealIndex}>
+  <h2 id="projects-heading" class="section-heading">## # personal_projects</h2>
+  <div class="projects__grid">
+    {projects.map((project, i) => (
+      <ProjectCard project={project} index={i} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .projects {
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-6) var(--space-20);
+  }
+
+  .section-heading {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent);
+    margin: 0 0 var(--space-6);
+  }
+
+  .projects__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+</style>

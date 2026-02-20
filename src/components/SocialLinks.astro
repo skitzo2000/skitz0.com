@@ -1,0 +1,85 @@
+---
+import type { SocialLink } from '../data/site';
+
+interface Props {
+  links: SocialLink[];
+  revealIndex?: number;
+}
+
+const { links, revealIndex = 0 } = Astro.props;
+---
+
+<section class="social" aria-labelledby="social-heading" data-reveal data-reveal-index={revealIndex}>
+  <h2 id="social-heading" class="section-heading">## $ social_links</h2>
+  <ul class="social__list">
+    {links.map((link, i) => (
+      <li class="social__item">
+        <a class="social__link" href={link.url} target="_blank" rel="noopener noreferrer">
+          <span class="social__cmd">$ open </span>
+          <span class="social__label">{link.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .social {
+    max-width: var(--container-narrow);
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-6);
+  }
+
+  .section-heading {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent);
+    margin: 0 0 var(--space-6);
+  }
+
+  .social__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .social__item {
+    margin: 0;
+  }
+
+  .social__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--fg-primary);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    transition: background var(--duration-fast) ease,
+      border-color var(--duration-fast) ease,
+      color var(--duration-fast) ease,
+      transform var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .social__link:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .social__cmd {
+    color: var(--fg-muted);
+  }
+
+  .social__link:hover .social__cmd {
+    color: var(--accent);
+  }
+</style>

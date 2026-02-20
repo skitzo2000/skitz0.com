@@ -1,0 +1,62 @@
+---
+import type { SiteMeta } from '../data/site';
+
+interface Props {
+  meta: SiteMeta;
+}
+
+const { meta } = Astro.props;
+---
+
+<header class="hero" data-reveal data-reveal-index="0">
+  <div class="hero__prompt">$ whoami</div>
+  <h1 class="hero__name">{meta.name}</h1>
+  <p class="hero__tagline">{meta.tagline}</p>
+  {meta.avatar && (
+    <div class="hero__avatar-wrap">
+      <img class="hero__avatar" src={meta.avatar} alt="" width="96" height="96" />
+    </div>
+  )}
+</header>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: var(--space-16) var(--space-6) var(--space-12);
+    max-width: var(--container-narrow);
+    margin: 0 auto;
+  }
+
+  .hero__prompt {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    color: var(--fg-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .hero__name {
+    font-size: clamp(var(--text-4xl), 7vw, 4rem);
+    margin: 0 0 var(--space-2);
+    color: var(--fg-primary);
+  }
+
+  .hero__tagline {
+    font-size: var(--text-xl);
+    color: var(--fg-secondary);
+    margin: 0 0 var(--space-8);
+  }
+
+  .hero__avatar-wrap {
+    display: inline-flex;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--border);
+  }
+
+  .hero__avatar {
+    display: block;
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+  }
+</style>

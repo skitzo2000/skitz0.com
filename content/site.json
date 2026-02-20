@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "name": "Paul Norton",
+    "tagline": "Senior Linux Cloud Engineer | Secure Infrastructure & DevOps | AI/ML & Automation Enthusiast",
+    "avatar": ""
+  },
+  "about": "Senior Linux Cloud Engineer with over a decade of experience building and securing application infrastructure and platforms. I specialize in designing, implementing, and optimizing secure, scalable solutions using containers, Kubernetes, and advanced automation techniques. My expertise extends to AI/ML infrastructure, ensuring robust and efficient data pipelines and model deployment. A core member at HackersGuildPGH, I actively contribute to the community by teaching 3D printing and HomeLab techniques, fostering innovation and knowledge sharing.",
+  "social": [
+    { "label": "GitHub", "url": "https://github.com/skitzo2000", "icon": "github" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/paulandrewnorton", "icon": "linkedin" },
+    { "label": "Norton Consulting", "url": "http://www.NortonConsultingEnterpises.com", "icon": "link" }
+  ],
+  "skills": [
+    {
+      "category": "Cloud & Infrastructure",
+      "items": ["AWS", "GCP", "Azure", "IBM Cloud", "EKS", "EC2", "IAM", "Route53", "CloudFormation", "Global Accelerator"]
+    },
+    {
+      "category": "DevOps & IaC",
+      "items": ["Terraform", "Ansible", "Packer", "Jenkins", "GitHub Actions", "GitOps", "Zabbix", "Jira", "Prometheus", "Grafana"]
+    },
+    {
+      "category": "Linux & Platforms",
+      "items": ["Debian", "Ubuntu", "CentOS", "RHEL", "Nginx", "Apache", "MySQL", "PostgreSQL", "Redis", "PHP"]
+    },
+    {
+      "category": "Containers & Orchestration",
+      "items": ["Docker", "Kubernetes", "OpenShift", "K9s", "kubectl", "Helm", "ETCD", "LXC", "ProxMox"]
+    },
+    {
+      "category": "Security & Compliance",
+      "items": ["PCI Compliance", "GHAS", "Trivy", "Wazuh", "Dependabot", "Patch Management"]
+    },
+    {
+      "category": "AI/ML & Data",
+      "items": ["TensorFlow", "PyTorch", "Jupyter", "MLOps", "Data Pipelines", "LLMs"]
+    },
+    {
+      "category": "Coding & Scripting",
+      "items": ["Python", "Bash", "Go", "JavaScript", "TypeScript", "PHP", "C#", "Rust"]
+    },
+    {
+      "category": "3D Printing & Design",
+      "items": ["FDM", "Resin", "Tinkercad", "Klipper", "Prototyping", "Challenging Prints"]
+    },
+    {
+      "category": "Networking",
+      "items": ["DNS", "TCP/IP", "VPNs", "Tailscale", "pfSense", "Load Balancing", "BGP", "VLAN"]
+    }
+  ],
+  "projects": [
+    {
+      "title": "skitz0prints",
+      "description": "Bespoke 3D printing services — precision engineering and hand-tailored design.",
+      "url": "https://skitz0prints.com",
+      "tags": ["3D printing", "design", "prototyping"]
+    },
+    {
+      "title": "ZenDeploy",
+      "description": "TUI and detailed auditing for manual deployment steps. Streamlined TUI for manual deployments, emphasizing auditing and control.",
+      "url": "https://github.com/skitzo2000/ZenDeploy",
+      "tags": ["Python", "TUI", "devops"]
+    },
+    {
+      "title": "mcp-discord-notify",
+      "description": "MCP server for Discord notifications. Integrates Model Context Protocol (MCP) with Discord for seamless notifications and workflow automation.",
+      "url": "https://github.com/skitzo2000/mcp-discord-notify",
+      "tags": ["MCP", "Discord", "automation"]
+    },
+    {
+      "title": "GMMK2-96",
+      "description": "QMK keymap for Glorious GMMK 2 96% keyboard.",
+      "url": "https://github.com/skitzo2000/GMMK2-96",
+      "tags": ["QMK", "keyboard", "C"]
+    },
+    {
+      "title": "MD-easy",
+      "description": "Automated Markdown tooling for efficient documentation and content management.",
+      "url": "https://github.com/skitzo2000/MD-easy",
+      "tags": ["markdown", "tooling"]
+    },
+    {
+      "title": "neurOs",
+      "description": "The Axis Ontology Simulation — a Dockerized neurOS containment vessel.",
+      "url": "https://github.com/skitzo2000/neurOs",
+      "tags": ["Docker", "simulation", "experimental"]
+    }
+  ]
+}
