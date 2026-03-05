@@ -331,10 +331,16 @@
       });
 
       cards.forEach(function(el) {
-        const title = el.querySelector('.card__title')?.textContent || '';
-        const desc = el.querySelector('.card__desc')?.textContent || '';
-        const tags = el.querySelector('.card__tags')?.textContent || '';
-        const text = (title + ' ' + desc + ' ' + tags).toLowerCase();
+        const filterAttr = el.getAttribute('data-filter-text');
+        var text;
+        if (filterAttr) {
+          text = filterAttr.toLowerCase();
+        } else {
+          const title = el.querySelector('.card__title')?.textContent || '';
+          const desc = el.querySelector('.card__desc')?.textContent || '';
+          const tags = el.querySelector('.card__tags')?.textContent || '';
+          text = (title + ' ' + desc + ' ' + tags).toLowerCase();
+        }
         if (text.includes(keyword)) {
           el.classList.add('cmd-highlight');
           matchCount++;

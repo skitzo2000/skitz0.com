@@ -28,7 +28,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Scrollable output history with 100-line buffer and auto-scroll
 - Rich output formatting (ASCII art, pre-formatted text)
 - Focus trap and ARIA attributes when command bar is open
+- GitHub-sourced project showcase replacing static project cards
+- Client-side GitHub API fetching with localStorage caching (1-hour TTL)
+- Auto-rotating project carousel (8-second interval, pause on hover)
+- Previous/Next navigation arrows for manual carousel control
+- README modal with lazy-loaded `marked` markdown rendering
+- Skeleton loading state with animated pulse placeholders
+- Language color indicators on project cards
+- Star count and relative time display on project cards
+- Topic tags (top 3) on project cards
+- "Live from GitHub" / "Cached" status indicator
+- `data-filter-text` attribute on showcase cards for enhanced filtering
+- `prefers-reduced-motion` support (disables auto-rotation and transitions)
+- ARIA labels and keyboard navigation for carousel controls
+- Responsive carousel: 4 cards desktop, 2 tablet, 1 mobile
 
 ### Changed
 - Migrated all component colors from hardcoded values to semantic CSS variables
 - Selection styles now use theme-specific selection colors
+- Replaced static Projects section with dynamic ProjectShowcase component
+- Updated CommandBar filter to use `data-filter-text` attribute when available
+- Added `marked` as project dependency for README markdown rendering
+- Added GitHub config (`github.username`) to site.json

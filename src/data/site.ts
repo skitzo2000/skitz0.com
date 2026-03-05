@@ -22,12 +22,18 @@ export interface SkillCategory {
   items: string[];
 }
 
+export interface GitHubConfig {
+  username: string;
+  pinned: string[];
+}
+
 export interface SiteData {
   meta: SiteMeta;
   about?: string;
   social: SocialLink[];
   skills?: SkillCategory[];
   projects: Project[];
+  github?: GitHubConfig;
 }
 
 import siteJson from '../../content/site.json';

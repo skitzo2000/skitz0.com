@@ -85,5 +85,9 @@
       "url": "https://github.com/skitzo2000/neurOs",
       "tags": ["Docker", "simulation", "experimental"]
     }
-  ]
+  ],
+  "github": {
+    "username": "skitzo2000",
+    "pinned": []
+  }
 }
