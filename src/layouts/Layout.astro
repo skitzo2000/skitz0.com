@@ -12,6 +12,45 @@ const { title, description = 'Personal site — links, projects, and more.' } = 
 <!doctype html>
 <html lang="en">
   <head>
+    <script is:inline>
+    (function() {
+      var THEMES = ['duotone-dark','flexoki-light','homebrew','dracula','nord'];
+      var STORAGE_KEY = 'skitz0-theme';
+      var DEFAULT_DARK = 'duotone-dark';
+      var DEFAULT_LIGHT = 'flexoki-light';
+      var root = document.documentElement;
+
+      function get() {
+        return root.dataset.theme || DEFAULT_DARK;
+      }
+
+      function set(name) {
+        if (THEMES.indexOf(name) === -1) return false;
+        root.classList.add('theme-transitioning');
+        root.dataset.theme = name;
+        try { localStorage.setItem(STORAGE_KEY, name); } catch(e) {}
+        setTimeout(function() { root.classList.remove('theme-transitioning'); }, 100);
+        return true;
+      }
+
+      function list() {
+        return THEMES.slice();
+      }
+
+      // Apply on load (before paint)
+      var saved = null;
+      try { saved = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+      if (saved && THEMES.indexOf(saved) !== -1) {
+        root.dataset.theme = saved;
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        root.dataset.theme = DEFAULT_LIGHT;
+      } else {
+        root.dataset.theme = DEFAULT_DARK;
+      }
+
+      window.__theme = { set: set, get: get, list: list };
+    })();
+    </script>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
