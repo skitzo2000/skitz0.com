@@ -313,6 +313,9 @@
       });
 
       if (!keyword || keyword === 'clear' || keyword === 'reset') {
+        if (typeof window.__graphFilter === 'function') {
+          window.__graphFilter('');
+        }
         return 'Filter cleared.';
       }
 
@@ -348,6 +351,11 @@
           el.classList.add('cmd-dim');
         }
       });
+
+      // Filter graph nodes
+      if (typeof window.__graphFilter === 'function') {
+        window.__graphFilter(keyword);
+      }
 
       return 'Found ' + matchCount + ' match' + (matchCount !== 1 ? 'es' : '') + ' across skills and projects.';
     },

@@ -1,0 +1,772 @@
+---
+import type { SkillCategory, CareerData } from '../data/site';
+
+interface Props {
+  skills: SkillCategory[];
+  careerData: CareerData;
+  revealIndex?: number;
+}
+
+const { skills, careerData, revealIndex = 3 } = Astro.props;
+---
+
+<section id="skills" class="knowledge-graph" aria-labelledby="skills-heading" data-reveal data-reveal-index={revealIndex}>
+  <h2 id="skills-heading" class="section-heading">## &gt; career_knowledge_graph</h2>
+
+  <!-- Static fallback: skills grid (visible before JS loads) -->
+  <div class="graph__fallback">
+    <div class="skills__grid">
+      {skills.map((group) => (
+        <div class="skills__category">
+          <h3 class="skills__category-name">$ {group.category.toLowerCase().replace(/\s+/g, '_')}</h3>
+          <ul class="skills__list">
+            {group.items.map((item) => (
+              <li class="skills__item">
+                <span class="skills__tag">#{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Graph container (shown when JS loads) -->
+  <div class="graph__container" style="display:none"
+       data-career-data={JSON.stringify(careerData)}
+       role="img"
+       aria-label="Interactive career knowledge graph showing skills, roles, companies, projects, and education connected by relationships">
+    <div class="graph__canvas-wrap">
+      <div id="graph-canvas" class="graph__canvas"></div>
+    </div>
+    <div class="graph__tooltip" hidden></div>
+    <div class="graph__controls">
+      <button class="graph__ctrl-btn" data-action="zoom-in" aria-label="Zoom in" type="button">+</button>
+      <button class="graph__ctrl-btn" data-action="zoom-out" aria-label="Zoom out" type="button">-</button>
+      <button class="graph__ctrl-btn" data-action="reset" aria-label="Reset view" type="button">Reset</button>
+    </div>
+    <div class="graph__legend">
+      <span class="graph__legend-item" data-type="role"><span class="graph__legend-dot graph__legend-dot--role"></span> Roles</span>
+      <span class="graph__legend-item" data-type="company"><span class="graph__legend-dot graph__legend-dot--company"></span> Companies</span>
+      <span class="graph__legend-item" data-type="skill"><span class="graph__legend-dot graph__legend-dot--skill"></span> Skills</span>
+      <span class="graph__legend-item" data-type="project"><span class="graph__legend-dot graph__legend-dot--project"></span> Projects</span>
+      <span class="graph__legend-item" data-type="education"><span class="graph__legend-dot graph__legend-dot--education"></span> Education</span>
+    </div>
+  </div>
+
+  <!-- Screen reader fallback -->
+  <div class="sr-only">
+    <h3>Skills and Career Connections</h3>
+    <ul>
+      {careerData.nodes.filter(n => n.type === 'skill').map((skill) => (
+        <li>{skill.label} - {skill.category}</li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* ---- Layout ---- */
+  .knowledge-graph {
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-6);
+  }
+
+  .section-heading {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--accent);
+    margin: 0 0 var(--space-6);
+  }
+
+  /* ---- Graph container ---- */
+  .graph__container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .graph__canvas-wrap {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    max-height: 600px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--bg-card);
+  }
+
+  .graph__canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ---- Tooltip ---- */
+  .graph__tooltip {
+    position: absolute;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    max-width: 280px;
+    pointer-events: none;
+    z-index: 10;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    opacity: 1;
+    transition: opacity 150ms;
+  }
+
+  .graph__tooltip[hidden] {
+    opacity: 0;
+    display: block !important;
+    pointer-events: none;
+  }
+
+  .tooltip__label {
+    font-weight: 700;
+    color: var(--fg-primary);
+    margin-bottom: 2px;
+  }
+
+  .tooltip__type {
+    color: var(--accent);
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .tooltip__desc {
+    color: var(--fg-secondary);
+    font-size: 0.85em;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
+  .tooltip__date {
+    color: var(--fg-muted);
+    font-size: 0.8em;
+  }
+
+  .tooltip__prof {
+    color: var(--accent);
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+  }
+
+  /* ---- Controls ---- */
+  .graph__controls {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .graph__ctrl-btn {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--fg-primary);
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-sm);
+    line-height: 1;
+    padding: 0;
+  }
+
+  .graph__ctrl-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent);
+  }
+
+  /* ---- Legend ---- */
+  .graph__legend {
+    position: absolute;
+    bottom: var(--space-3);
+    left: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--fg-secondary);
+  }
+
+  .graph__legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .graph__legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: var(--space-1);
+  }
+
+  .graph__legend-dot--role {
+    background-color: var(--palette-4);
+  }
+
+  .graph__legend-dot--company {
+    background-color: var(--palette-6);
+  }
+
+  .graph__legend-dot--skill {
+    background-color: var(--accent);
+  }
+
+  .graph__legend-dot--project {
+    background-color: var(--palette-2);
+  }
+
+  .graph__legend-dot--education {
+    background-color: var(--palette-3);
+  }
+
+  /* ---- Fallback skills grid (replicated from Skills.astro) ---- */
+  .graph__fallback .skills__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .graph__fallback .skills__category {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+  }
+
+  .graph__fallback .skills__category-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--fg-secondary);
+    margin: 0 0 var(--space-4);
+  }
+
+  .graph__fallback .skills__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .graph__fallback .skills__item {
+    margin: 0;
+  }
+
+  .graph__fallback .skills__tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  /* ---- Screen reader only ---- */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 768px) {
+    .graph__container {
+      aspect-ratio: 4 / 3;
+    }
+
+    .graph__canvas-wrap {
+      min-height: 300px;
+      max-height: 450px;
+    }
+
+    .graph__legend {
+      font-size: 0.65em;
+      gap: var(--space-2);
+    }
+
+    .graph__ctrl-btn {
+      width: 28px;
+      height: 28px;
+      font-size: 0.75em;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .graph__canvas-wrap {
+      min-height: 250px;
+      max-height: 350px;
+    }
+
+    .graph__legend {
+      font-size: 0.6em;
+      gap: var(--space-1);
+    }
+  }
+</style>
+
+<script>
+  import Graph from 'graphology';
+  import Sigma from 'sigma';
+  import forceAtlas2 from 'graphology-layout-forceatlas2';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.graph__container') as HTMLElement;
+    if (!container) return;
+
+    const canvasEl = document.getElementById('graph-canvas');
+    if (!canvasEl) return;
+
+    // Parse career data
+    const rawData = container.getAttribute('data-career-data');
+    if (!rawData) return;
+
+    let careerData: { nodes: any[]; edges: any[] };
+    try {
+      careerData = JSON.parse(rawData);
+    } catch {
+      return;
+    }
+
+    if (!careerData.nodes || !careerData.edges || careerData.nodes.length === 0) return;
+
+    // Check reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Helper: read CSS custom property
+    function getCSSVar(name: string): string {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    // Color mapping by node type
+    function getNodeColor(type: string): string {
+      const colors: Record<string, string> = {
+        role: getCSSVar('--palette-4'),
+        company: getCSSVar('--palette-6'),
+        skill: getCSSVar('--accent'),
+        project: getCSSVar('--palette-2'),
+        education: getCSSVar('--palette-3'),
+        certification: getCSSVar('--palette-5'),
+      };
+      return colors[type] || getCSSVar('--fg-muted');
+    }
+
+    // Size mapping
+    function getNodeSize(type: string, proficiency?: number): number {
+      switch (type) {
+        case 'role': return 12;
+        case 'company': return 10;
+        case 'project': return 8;
+        case 'education': return 8;
+        case 'skill': return 4 + (proficiency || 3);
+        default: return 6;
+      }
+    }
+
+    // Build graph
+    const graph = new Graph();
+
+    careerData.nodes.forEach((node: any) => {
+      graph.addNode(node.id, {
+        label: node.label,
+        size: getNodeSize(node.type, node.proficiency),
+        color: getNodeColor(node.type),
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        nodeType: node.type,
+        category: node.category || '',
+        description: node.description || '',
+        startDate: node.startDate || '',
+        endDate: node.endDate || '',
+        proficiency: node.proficiency || 0,
+        url: node.url || '',
+        origX: 0,
+        origY: 0,
+      });
+    });
+
+    careerData.edges.forEach((edge: any) => {
+      // Guard against missing nodes or duplicate edges
+      if (!graph.hasNode(edge.source) || !graph.hasNode(edge.target)) return;
+      if (!graph.hasEdge(edge.source, edge.target)) {
+        graph.addEdge(edge.source, edge.target, {
+          color: getCSSVar('--fg-muted') + '4D',
+          size: 1,
+          edgeType: edge.type,
+        });
+      }
+    });
+
+    // Assign initial positions grouped by type for better clustering
+    const typeGroups: Record<string, number> = {
+      company: 0, role: 1, education: 2, skill: 3, project: 4,
+    };
+
+    graph.forEachNode((node, attrs) => {
+      const group = typeGroups[attrs.nodeType] || 3;
+      const angle = (group / 5) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+      const radius = 50 + Math.random() * 30;
+      graph.setNodeAttribute(node, 'x', Math.cos(angle) * radius);
+      graph.setNodeAttribute(node, 'y', Math.sin(angle) * radius);
+    });
+
+    // Run ForceAtlas2 batch layout
+    forceAtlas2.assign(graph, {
+      iterations: 200,
+      settings: {
+        gravity: 1,
+        scalingRatio: 10,
+        strongGravityMode: true,
+        barnesHutOptimize: true,
+      },
+    });
+
+    // Store final positions for animation
+    const finalPositions: Record<string, { x: number; y: number }> = {};
+    graph.forEachNode((node, attrs) => {
+      finalPositions[node] = { x: attrs.x, y: attrs.y };
+    });
+
+    // For animation: scatter nodes to random start positions
+    if (!prefersReducedMotion) {
+      graph.forEachNode((node) => {
+        const startX = (Math.random() - 0.5) * 200;
+        const startY = (Math.random() - 0.5) * 200;
+        graph.setNodeAttribute(node, 'origX', startX);
+        graph.setNodeAttribute(node, 'origY', startY);
+        graph.setNodeAttribute(node, 'x', startX);
+        graph.setNodeAttribute(node, 'y', startY);
+      });
+    }
+
+    // Show container, hide fallback
+    const fallback = document.querySelector('.graph__fallback') as HTMLElement;
+    if (fallback) fallback.style.display = 'none';
+    container.style.display = '';
+
+    // Initialize Sigma
+    const sigmaInstance = new Sigma(graph, canvasEl, {
+      renderEdgeLabels: false,
+      defaultEdgeType: 'line',
+      labelFont: 'var(--font-mono, monospace)',
+      labelColor: { color: getCSSVar('--fg-primary') },
+      labelSize: 12,
+      labelDensity: 0.5,
+      labelGridCellSize: 100,
+      labelRenderedSizeThreshold: 6,
+      defaultNodeType: 'circle',
+      stagePadding: 30,
+    });
+
+    // ---- ANIMATED ENTRANCE ----
+    if (!prefersReducedMotion) {
+      const staggerDelays: Record<string, number> = {
+        company: 0,
+        role: 200,
+        education: 400,
+        skill: 600,
+        project: 800,
+      };
+
+      const animDuration = 800;
+      const startTime = performance.now();
+
+      function easeOutCubic(t: number): number {
+        return 1 - Math.pow(1 - t, 3);
+      }
+
+      function animateEntrance(timestamp: number) {
+        const elapsed = timestamp - startTime;
+        let allDone = true;
+
+        graph.forEachNode((node, attrs) => {
+          const delay = staggerDelays[attrs.nodeType] || 600;
+          const nodeElapsed = elapsed - delay;
+
+          if (nodeElapsed < 0) {
+            allDone = false;
+            return;
+          }
+
+          const progress = Math.min(nodeElapsed / animDuration, 1);
+          const eased = easeOutCubic(progress);
+          const final = finalPositions[node];
+          const startX = attrs.origX || 0;
+          const startY = attrs.origY || 0;
+
+          if (progress < 1) {
+            allDone = false;
+            const currentX = startX + (final.x - startX) * eased;
+            const currentY = startY + (final.y - startY) * eased;
+            graph.setNodeAttribute(node, 'x', currentX);
+            graph.setNodeAttribute(node, 'y', currentY);
+          } else {
+            graph.setNodeAttribute(node, 'x', final.x);
+            graph.setNodeAttribute(node, 'y', final.y);
+          }
+        });
+
+        if (!allDone) {
+          requestAnimationFrame(animateEntrance);
+        }
+      }
+
+      requestAnimationFrame(animateEntrance);
+    }
+
+    // ---- TOOLTIP ----
+    // Tooltip uses safe DOM construction (textContent) to avoid XSS.
+    // Data comes from our own career-data.json, serialized at build time.
+    const tooltip = container.querySelector('.graph__tooltip') as HTMLElement;
+
+    function buildTooltip(attrs: Record<string, any>): void {
+      tooltip.textContent = '';
+
+      const labelEl = document.createElement('div');
+      labelEl.className = 'tooltip__label';
+      labelEl.textContent = attrs.label;
+      tooltip.appendChild(labelEl);
+
+      const typeEl = document.createElement('div');
+      typeEl.className = 'tooltip__type';
+      typeEl.textContent = attrs.nodeType;
+      tooltip.appendChild(typeEl);
+
+      if (attrs.description) {
+        const descEl = document.createElement('div');
+        descEl.className = 'tooltip__desc';
+        descEl.textContent = attrs.description;
+        tooltip.appendChild(descEl);
+      }
+
+      if (attrs.startDate) {
+        const end = attrs.endDate === 'present' ? 'Present' : attrs.endDate;
+        const dateEl = document.createElement('div');
+        dateEl.className = 'tooltip__date';
+        dateEl.textContent = `${attrs.startDate} \u2014 ${end || ''}`;
+        tooltip.appendChild(dateEl);
+      }
+
+      if (attrs.proficiency) {
+        const filled = '\u25A0'.repeat(attrs.proficiency);
+        const empty = '\u25A1'.repeat(5 - attrs.proficiency);
+        const profEl = document.createElement('div');
+        profEl.className = 'tooltip__prof';
+        profEl.textContent = `Proficiency: ${filled}${empty}`;
+        tooltip.appendChild(profEl);
+      }
+    }
+
+    sigmaInstance.on('enterNode', ({ node }) => {
+      const attrs = graph.getNodeAttributes(node);
+      buildTooltip(attrs);
+      tooltip.hidden = false;
+    });
+
+    sigmaInstance.on('leaveNode', () => {
+      tooltip.hidden = true;
+    });
+
+    // Position tooltip near mouse
+    canvasEl.addEventListener('mousemove', (e: MouseEvent) => {
+      if (!tooltip.hidden) {
+        const rect = canvasEl.getBoundingClientRect();
+        tooltip.style.left = (e.clientX - rect.left + 15) + 'px';
+        tooltip.style.top = (e.clientY - rect.top + 15) + 'px';
+      }
+    });
+
+    // ---- CLICK DRILL-DOWN ----
+    let highlightedNode: string | null = null;
+    let highlightedNeighbors: Set<string> = new Set();
+
+    sigmaInstance.on('clickNode', ({ node }) => {
+      highlightedNode = node;
+      highlightedNeighbors = new Set(graph.neighbors(node));
+      highlightedNeighbors.add(node);
+
+      graph.forEachNode((n, attrs) => {
+        if (highlightedNeighbors.has(n)) {
+          graph.setNodeAttribute(n, 'color', getNodeColor(attrs.nodeType));
+        } else {
+          const baseColor = getNodeColor(attrs.nodeType);
+          graph.setNodeAttribute(n, 'color', baseColor + '26');
+        }
+      });
+
+      graph.forEachEdge((edge, attrs, source, target) => {
+        if (highlightedNeighbors.has(source) && highlightedNeighbors.has(target)) {
+          graph.setEdgeAttribute(edge, 'color', getCSSVar('--accent'));
+          graph.setEdgeAttribute(edge, 'size', 2);
+        } else {
+          graph.setEdgeAttribute(edge, 'color', getCSSVar('--fg-muted') + '0D');
+          graph.setEdgeAttribute(edge, 'size', 0.5);
+        }
+      });
+    });
+
+    sigmaInstance.on('clickStage', () => {
+      if (highlightedNode) {
+        resetHighlight();
+      }
+    });
+
+    function resetHighlight() {
+      highlightedNode = null;
+      highlightedNeighbors.clear();
+
+      graph.forEachNode((n, attrs) => {
+        graph.setNodeAttribute(n, 'color', getNodeColor(attrs.nodeType));
+      });
+
+      graph.forEachEdge((edge) => {
+        graph.setEdgeAttribute(edge, 'color', getCSSVar('--fg-muted') + '4D');
+        graph.setEdgeAttribute(edge, 'size', 1);
+      });
+    }
+
+    // ---- ZOOM CONTROLS ----
+    const controls = container.querySelectorAll('.graph__ctrl-btn');
+    controls.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const action = (btn as HTMLElement).getAttribute('data-action');
+        const camera = sigmaInstance.getCamera();
+        if (action === 'zoom-in') {
+          camera.animatedZoom({ duration: 300 });
+        } else if (action === 'zoom-out') {
+          camera.animatedUnzoom({ duration: 300 });
+        } else if (action === 'reset') {
+          camera.animatedReset({ duration: 300 });
+          resetHighlight();
+        }
+      });
+    });
+
+    // ---- DRAG SUPPORT ----
+    let draggedNode: string | null = null;
+    let isDragging = false;
+
+    sigmaInstance.on('downNode', (e) => {
+      isDragging = true;
+      draggedNode = e.node;
+      sigmaInstance.getCamera().disable();
+    });
+
+    sigmaInstance.getMouseCaptor().on('mousemovebody', (e) => {
+      if (!isDragging || !draggedNode) return;
+      const pos = sigmaInstance.viewportToGraph(e);
+      graph.setNodeAttribute(draggedNode, 'x', pos.x);
+      graph.setNodeAttribute(draggedNode, 'y', pos.y);
+      e.original?.preventDefault?.();
+    });
+
+    sigmaInstance.getMouseCaptor().on('mouseup', () => {
+      if (draggedNode) {
+        isDragging = false;
+        draggedNode = null;
+        sigmaInstance.getCamera().enable();
+      }
+    });
+
+    // ---- THEME INTEGRATION ----
+    function updateThemeColors() {
+      graph.forEachNode((n, attrs) => {
+        if (!highlightedNode || highlightedNeighbors.has(n)) {
+          graph.setNodeAttribute(n, 'color', getNodeColor(attrs.nodeType));
+        }
+      });
+
+      graph.forEachEdge((edge, attrs, source, target) => {
+        if (highlightedNode) {
+          if (highlightedNeighbors.has(source) && highlightedNeighbors.has(target)) {
+            graph.setEdgeAttribute(edge, 'color', getCSSVar('--accent'));
+          } else {
+            graph.setEdgeAttribute(edge, 'color', getCSSVar('--fg-muted') + '0D');
+          }
+        } else {
+          graph.setEdgeAttribute(edge, 'color', getCSSVar('--fg-muted') + '4D');
+        }
+      });
+
+      sigmaInstance.setSetting('labelColor', { color: getCSSVar('--fg-primary') });
+    }
+
+    // Watch for theme changes via data-theme attribute
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'data-theme') {
+          requestAnimationFrame(() => updateThemeColors());
+        }
+      }
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    // ---- COMMAND BAR FILTER INTEGRATION ----
+    (window as any).__graphFilter = function(keyword: string) {
+      if (!keyword) {
+        resetHighlight();
+        return;
+      }
+
+      const kw = keyword.toLowerCase();
+      const matchingNodes = new Set<string>();
+
+      graph.forEachNode((node, attrs) => {
+        const searchText = [
+          attrs.label,
+          attrs.nodeType,
+          attrs.category,
+          attrs.description,
+        ].join(' ').toLowerCase();
+
+        if (searchText.includes(kw)) {
+          matchingNodes.add(node);
+        }
+      });
+
+      graph.forEachNode((n, attrs) => {
+        if (matchingNodes.has(n)) {
+          graph.setNodeAttribute(n, 'color', getNodeColor(attrs.nodeType));
+        } else {
+          const baseColor = getNodeColor(attrs.nodeType);
+          graph.setNodeAttribute(n, 'color', baseColor + '26');
+        }
+      });
+
+      graph.forEachEdge((edge, attrs, source, target) => {
+        if (matchingNodes.has(source) && matchingNodes.has(target)) {
+          graph.setEdgeAttribute(edge, 'color', getCSSVar('--accent'));
+          graph.setEdgeAttribute(edge, 'size', 2);
+        } else {
+          graph.setEdgeAttribute(edge, 'color', getCSSVar('--fg-muted') + '0D');
+          graph.setEdgeAttribute(edge, 'size', 0.5);
+        }
+      });
+    };
+  });
+</script>

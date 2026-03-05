@@ -1,0 +1,230 @@
+{
+  "feature": "career-knowledge-graph",
+  "version": "2.0",
+  "generated": "2026-03-05T12:00:00Z",
+  "total_tasks": 8,
+  "estimated_duration_minutes": 115,
+  "max_parallelization": 3,
+
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Create career-data.json with full career history",
+      "description": "Create content/career-data.json containing all career nodes (roles, companies, skills, projects, education) and edges extracted from the 3 resume PDFs. Include ~75-80 nodes and all relationship edges. Skills should have proficiency ratings 1-5. Each node needs id, type, label, and relevant metadata (dates, descriptions, categories, URLs).",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": ["content/career-data.json"],
+        "modify": [],
+        "read": ["content/site.json"]
+      },
+      "verification": {
+        "command": "node -e \"const d=require('./content/career-data.json'); console.log('Nodes:', d.nodes.length, 'Edges:', d.edges.length); if(d.nodes.length<60) process.exit(1);\"",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 20,
+      "skills_required": ["json"],
+      "consumers": ["TASK-004"],
+      "integration_test": null,
+      "context": "## Spec Context\nCareer data from resumes:\n\nRoles:\n1. Senior Linux Cloud Engineer — Smith Micro Software (Jan 2022 – Oct 2025)\n2. Principal Consultant — Norton Consulting (Jan 2017 – Present)\n3. Senior Full Stack Developer / Senior Technology Specialist — Ronin Advertising (Aug 2012 – Dec 2016)\n4. SEO Manager — Higher Images (Dec 2006 – Jan 2012)\n\nEducation:\n1. BS Information Sciences — Robert Morris University (Aug 2002 – Dec 2003)\n2. Associates in Networking & Programming — CCAC (Jan 2001 – Jun 2002)\n\nSkills (~60 unique, 9 categories from site.json):\nCloud & Infrastructure: AWS, GCP, Azure, IBM Cloud, EKS, EC2, IAM, Route53, CloudFormation, Global Accelerator\nDevOps & IaC: Terraform, Ansible, Packer, Jenkins, GitHub Actions, GitOps, Zabbix, Jira, Prometheus, Grafana\nLinux & Platforms: Debian, Ubuntu, CentOS, RHEL, Nginx, Apache, MySQL, PostgreSQL, Redis, PHP\nContainers & Orchestration: Docker, Kubernetes, OpenShift, K9s, kubectl, Helm, ETCD, LXC, ProxMox\nSecurity & Compliance: PCI Compliance, GHAS, Trivy, Wazuh, Dependabot, Patch Management, Cyber Security\nAI/ML & Data: TensorFlow, PyTorch, Jupyter, MLOps, Data Pipelines, LLMs\nCoding & Scripting: Python, Bash, Go, JavaScript, TypeScript, PHP, C#, Rust, Java, Node.js\n3D Printing & Design: FDM, Resin, Tinkercad, Klipper, Prototyping\nNetworking: DNS, TCP/IP, VPNs, Tailscale, pfSense, Load Balancing, BGP, VLAN\n\nProjects: skitz0prints, ZenDeploy, mcp-discord-notify, GMMK2-96, MD-easy, neurOs\n\nEdge types: worked-at (role→company), used-skill (role→skill), built-with (project→skill), earned-at (education→school), part-of (skill→category)\n\nProficiency scale: 5=expert (10+ years daily use), 4=advanced, 3=proficient, 2=working knowledge, 1=familiar\n\nGitHub language history for proficiency dating:\n- Shell: since 2014\n- JavaScript: since 2016\n- Python: since 2017\n- TypeScript: since 2020\n- Go: since 2022\n- Rust: since 2023\n- C: since 2023\n\n## Data Schema\n```json\n{\n  \"nodes\": [\n    { \"id\": \"string\", \"type\": \"role|company|skill|project|education\", \"label\": \"string\", \"category\": \"string?\", \"startDate\": \"ISO?\", \"endDate\": \"ISO|present?\", \"proficiency\": \"1-5?\", \"description\": \"string?\", \"url\": \"string?\" }\n  ],\n  \"edges\": [\n    { \"source\": \"nodeId\", \"target\": \"nodeId\", \"type\": \"worked-at|used-skill|built-with|earned-at|part-of\" }\n  ]\n}\n```\n\nIMPORTANT: The word 'blog' must NEVER appear anywhere. No Co-Authored-By in commits."
+    },
+    {
+      "id": "TASK-002",
+      "title": "Install sigma.js, graphology, and forceatlas2 dependencies",
+      "description": "Install the 3 required npm packages: sigma, graphology, and graphology-layout-forceatlas2. Run npm install and verify they appear in package.json dependencies.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["package.json"],
+        "read": []
+      },
+      "verification": {
+        "command": "node -e \"require('sigma'); require('graphology'); require('graphology-layout-forceatlas2'); console.log('All deps OK');\"",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["npm"],
+      "consumers": ["TASK-004"],
+      "integration_test": null,
+      "context": "## Spec Context\nNFR-1: Dependencies — sigma.js, graphology, graphology-layout-forceatlas2 (3 new deps)\nNFR-2: Bundle size — sigma (~50KB gzip), graphology (~15KB gzip), forceatlas2 (~5KB gzip)\n\nRun: npm install sigma graphology graphology-layout-forceatlas2\n\nThese are imported client-side via Astro's <script> tag processing (AC-3).\n\nIMPORTANT: No Co-Authored-By in commits."
+    },
+    {
+      "id": "TASK-003",
+      "title": "Add CareerData TypeScript interfaces to site.ts",
+      "description": "Add CareerNode, CareerEdge, and CareerData interfaces to src/data/site.ts. Add a getCareerData() function that imports and returns content/career-data.json. Also add CareerData to the SiteData interface as an optional field, or keep it as a separate import — design decision: separate import is cleaner since career-data.json is a new file not part of site.json.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["src/data/site.ts"],
+        "read": []
+      },
+      "verification": {
+        "command": "grep -c 'CareerData' src/data/site.ts",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["typescript"],
+      "consumers": ["TASK-004"],
+      "integration_test": null,
+      "context": "## Spec Context\nData model interfaces:\n\n```typescript\ninterface CareerNode {\n  id: string;\n  type: 'role' | 'company' | 'skill' | 'project' | 'education' | 'certification';\n  label: string;\n  category?: string;\n  startDate?: string;\n  endDate?: string;\n  proficiency?: number;\n  description?: string;\n  url?: string;\n}\n\ninterface CareerEdge {\n  source: string;\n  target: string;\n  type: 'worked-at' | 'used-skill' | 'built-with' | 'earned-at' | 'requires' | 'part-of';\n}\n\ninterface CareerData {\n  nodes: CareerNode[];\n  edges: CareerEdge[];\n}\n```\n\nExisting file exports: SiteMeta, SocialLink, Project, SkillCategory, GitHubConfig, SiteData, getSiteData().\nAdd: CareerNode, CareerEdge, CareerData, getCareerData().\ngetCareerData() imports from '../../content/career-data.json'.\n\nKeep CareerData separate from SiteData (not nested in site.json).\n\nIMPORTANT: No Co-Authored-By in commits."
+    },
+    {
+      "id": "TASK-004",
+      "title": "Create KnowledgeGraph.astro component",
+      "description": "Create the main KnowledgeGraph.astro component as a single-file Astro component. This is the largest task. Component must include:\n\n**Frontmatter**: Import types, accept Props (skills: SkillCategory[], careerData: CareerData, revealIndex?).\n\n**HTML Template**:\n- Section with id='skills' (retains goto compatibility)\n- Fallback skills grid (from Skills.astro markup, shown before JS)\n- Graph container (hidden until JS: canvas, tooltip, controls, legend)\n- SR-only accessible text list of all skills and connections\n\n**CSS (scoped)**:\n- All colors from CSS custom properties (--palette-N, --accent, --bg-*, --fg-*, --border)\n- Responsive: 320px+ viewport\n- Tooltip styles, legend, controls\n- .cmd-highlight/.cmd-dim support for filter integration\n\n**Client-side Script**:\n- Import sigma, graphology, forceatlas2\n- Parse career data from data attribute\n- Build graph: add nodes with type-based sizes/colors, add edges\n- Compute ForceAtlas2 layout (batch, seeded)\n- Animated entrance (staggered by type, 1.5s total, prefers-reduced-motion check)\n- Click handler: highlight connected, dim others\n- Click background: reset\n- Hover: show/position tooltip\n- Drag: Sigma built-in\n- Zoom controls: buttons + wheel/pinch\n- Theme change: MutationObserver on data-theme, re-read CSS vars, update colors\n- Expose window.__graphFilter(keyword) for CommandBar integration\n- Hide fallback, show container on init",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TASK-001", "TASK-002", "TASK-003"],
+      "files": {
+        "create": ["src/components/KnowledgeGraph.astro"],
+        "modify": [],
+        "read": ["src/components/Skills.astro", "src/components/ProjectShowcase.astro", "src/styles/themes.css", "content/career-data.json", "src/data/site.ts"]
+      },
+      "verification": {
+        "command": "grep -c 'sigma\\|graphology\\|Sigma' src/components/KnowledgeGraph.astro",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 60,
+      "skills_required": ["astro", "typescript", "webgl", "css"],
+      "consumers": ["TASK-005", "TASK-006"],
+      "integration_test": null,
+      "context": "## Spec Context\nAC-1: Single-file Astro component (consistent with ProjectShowcase.astro at 993 lines, CommandBar.astro at 617 lines).\nAC-2: Career data from content/career-data.json loaded at build time in frontmatter.\nAC-3: sigma.js + graphology imported client-side via <script> tag.\nAC-4: Section retains id='skills' for goto compatibility.\nAC-5: CSS uses only theme custom properties.\nAC-6: Canvas for WebGL, CSS-styled overlays for tooltips.\nAC-7: Graph state in plain JS.\nAC-8: prefers-reduced-motion respected.\n\n## Props Interface\n```typescript\ninterface Props {\n  skills: SkillCategory[];\n  careerData: CareerData;\n  revealIndex?: number;\n}\n```\n\n## Node Visual Design\n| Type | Palette Variable | Size |\n|------|-----------------|------|\n| role | --palette-4 | 12 (large) |\n| company | --palette-6 | 10 (medium) |\n| skill | --accent | 4-8 (by proficiency) |\n| project | --palette-2 | 8 (medium) |\n| education | --palette-3 | 8 (medium) |\n\n## Edge Styles\n- Default: 1px, --fg-muted at 0.3 opacity\n- Highlighted: 2px, --accent at 1.0 opacity\n\n## Tooltip\n- Background: --bg-elevated, Border: --border\n- Text: --fg-primary (label), --fg-secondary (details)\n- Font: --font-mono for labels\n- Max width: 280px\n\n## Animation\n- Stagger: companies (0ms) → roles (200ms) → education (400ms) → skills (600ms) → projects (800ms)\n- Duration ~1.5s total with easeOutCubic\n- prefers-reduced-motion: instant placement\n\n## Theme Integration\n- MutationObserver on document.documentElement data-theme attribute\n- Re-read CSS custom properties on change\n- Update node/edge colors in graphology → Sigma auto-re-renders\n\n## Filter Integration\n- Expose window.__graphFilter(keyword: string) globally\n- Match against node label, category, type\n- Highlight matches, dim non-matches\n- Empty string resets\n\n## Fallback\n- .graph__fallback shows existing skills grid (rendered at build time)\n- .graph__container hidden via style='display:none'\n- On JS load: hide fallback, show container\n\n## Key Patterns from Existing Components\nSkills.astro: Section id='skills', .section-heading class, .skills__grid layout, .skills__tag items\nProjectShowcase.astro: data-reveal, data-reveal-index, skeleton patterns, modal pattern\nCommandBar.astro: window.__terminal API pattern, theme event handling\n\n## Accessibility\n- role='img' with aria-label on graph container\n- SR-only div with text list of all skills and connections\n- Keyboard: Tab to graph region, zoom controls focusable\n- ARIA labels on all buttons\n\nIMPORTANT: The word 'blog' must NEVER appear. No Co-Authored-By in commits."
+    },
+    {
+      "id": "TASK-005",
+      "title": "Update index.astro to use KnowledgeGraph component",
+      "description": "Replace the Skills component import and usage in src/pages/index.astro with KnowledgeGraph. Import getCareerData from site.ts. Pass both skills (for fallback) and careerData to the component. Keep the same revealIndex (3).",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["TASK-004"],
+      "files": {
+        "create": [],
+        "modify": ["src/pages/index.astro"],
+        "read": ["src/data/site.ts"]
+      },
+      "verification": {
+        "command": "grep -c 'KnowledgeGraph' src/pages/index.astro && ! grep -q 'import Skills' src/pages/index.astro && echo 'OK'",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["astro"],
+      "consumers": ["TASK-007"],
+      "integration_test": null,
+      "context": "## Spec Context\nCurrent index.astro imports Skills and renders:\n```astro\nimport Skills from '../components/Skills.astro';\n{site.skills && site.skills.length > 0 && <Skills skills={site.skills} revealIndex={3} />}\n```\n\nReplace with:\n```astro\nimport KnowledgeGraph from '../components/KnowledgeGraph.astro';\nimport { getCareerData } from '../data/site';\nconst careerData = getCareerData();\n\n{site.skills && site.skills.length > 0 && <KnowledgeGraph skills={site.skills} careerData={careerData} revealIndex={3} />}\n```\n\nKeep all other imports and components unchanged. Skills import can be removed.\n\nIMPORTANT: No Co-Authored-By in commits."
+    },
+    {
+      "id": "TASK-006",
+      "title": "Update CommandBar filter to support graph nodes",
+      "description": "Modify the filter function in CommandBar.astro to call window.__graphFilter(keyword) when the function exists. Add the call after the existing skills/cards filtering logic. Also call window.__graphFilter('') on filter clear/reset.",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["TASK-004"],
+      "files": {
+        "create": [],
+        "modify": ["src/components/CommandBar.astro"],
+        "read": []
+      },
+      "verification": {
+        "command": "grep -c '__graphFilter' src/components/CommandBar.astro",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["javascript"],
+      "consumers": ["TASK-007"],
+      "integration_test": null,
+      "context": "## Spec Context\nCommandBar.astro filter function (around line 307):\n```javascript\nfilter: function(args) {\n  const keyword = args.trim().toLowerCase();\n  // Clear existing filter\n  document.querySelectorAll('.cmd-highlight, .cmd-dim').forEach(function(el) {\n    el.classList.remove('cmd-highlight', 'cmd-dim');\n  });\n  if (!keyword || keyword === 'clear' || keyword === 'reset') {\n    return 'Filter cleared.';\n  }\n  // ... skills and cards filtering ...\n  return 'Found ' + matchCount + ' match...';\n}\n```\n\nAdd after the clear block:\n```javascript\nif (typeof window.__graphFilter === 'function') {\n  window.__graphFilter(keyword || '');\n}\n```\n\nAnd in the clear/reset block, add:\n```javascript\nif (typeof window.__graphFilter === 'function') {\n  window.__graphFilter('');\n}\n```\n\nKeep the existing .skills__item and .card filtering intact — they serve as fallback and for non-graph elements.\n\nIMPORTANT: No Co-Authored-By in commits."
+    },
+    {
+      "id": "TASK-007",
+      "title": "Build verification and acceptance checks",
+      "description": "Run npx astro build to verify the project builds successfully. Check for:\n1. Build completes without errors\n2. No TypeScript errors\n3. grep -r 'blog' src/ content/ returns 0 matches\n4. KnowledgeGraph is referenced in index.astro\n5. career-data.json has 60+ nodes\n6. No 'Co-Authored-By' in recent commits",
+      "phase": "verification",
+      "level": 4,
+      "dependencies": ["TASK-005", "TASK-006"],
+      "files": {
+        "create": [],
+        "modify": [],
+        "read": []
+      },
+      "verification": {
+        "command": "npx astro build 2>&1 | tail -5",
+        "timeout_seconds": 120
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["astro"],
+      "consumers": ["TASK-008"],
+      "integration_test": null,
+      "context": "## Verification Checklist\n1. npx astro build — must pass\n2. grep -ri 'blog' src/ content/ — must return 0 matches\n3. grep -c 'KnowledgeGraph' src/pages/index.astro — must be >= 1\n4. grep -c '__graphFilter' src/components/CommandBar.astro — must be >= 1\n5. node -e \"const d=require('./content/career-data.json'); if(d.nodes.length<60) process.exit(1);\" — must pass\n6. git log --oneline -10 | grep -i 'co-authored' — must return 0\n\nIf build fails, diagnose and fix the issue. Common problems:\n- TypeScript type errors in the component\n- Missing imports\n- JSON syntax errors in career-data.json\n\nIMPORTANT: No Co-Authored-By in commits."
+    },
+    {
+      "id": "TASK-008",
+      "title": "Update CHANGELOG.md",
+      "description": "Add entries under [Unreleased] section for all changes in this feature. Use 'Added' and 'Changed' categories.\n\nAdded:\n- Interactive career knowledge graph replacing flat skills grid\n- WebGL graph rendering via Sigma.js + graphology\n- Career data model with roles, companies, skills, projects, and education nodes\n- ForceAtlas2 force-directed graph layout\n- Animated node entrance with staggered type-based appearance\n- Click-to-drill node highlighting with connected neighbor focus\n- Hover tooltips with node details (label, type, description, dates)\n- Drag-to-reposition, zoom/pan, and pinch-to-zoom touch support\n- Graph zoom controls (zoom in, zoom out, reset)\n- Node type legend overlay\n- Screen reader accessible skills list fallback\n- `window.__graphFilter()` API for command bar integration\n- `prefers-reduced-motion` support for graph animations\n\nChanged:\n- Replaced Skills section with KnowledgeGraph component in index page\n- Updated CommandBar filter to highlight/dim graph nodes via `__graphFilter`\n- Added sigma, graphology, graphology-layout-forceatlas2 as dependencies\n- Skills section heading changed to `## > career_knowledge_graph`",
+      "phase": "quality",
+      "level": 5,
+      "dependencies": ["TASK-007"],
+      "files": {
+        "create": [],
+        "modify": ["CHANGELOG.md"],
+        "read": []
+      },
+      "verification": {
+        "command": "grep -c 'knowledge graph\\|KnowledgeGraph\\|Sigma\\|graphology' CHANGELOG.md",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["markdown"],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## Spec Context\nUpdate CHANGELOG.md [Unreleased] section. Format: Keep a Changelog.\nExisting entries are already under [Unreleased] from previous features (theme engine, command bar, project showcase).\n\nAppend new entries to the existing Added and Changed lists.\n\nIMPORTANT: The word 'blog' must NEVER appear. No Co-Authored-By in commits."
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["TASK-001", "TASK-002", "TASK-003"],
+      "parallel": true,
+      "estimated_minutes": 20,
+      "depends_on_levels": []
+    },
+    "2": {
+      "name": "core",
+      "tasks": ["TASK-004"],
+      "parallel": false,
+      "estimated_minutes": 60,
+      "depends_on_levels": [1]
+    },
+    "3": {
+      "name": "integration",
+      "tasks": ["TASK-005", "TASK-006"],
+      "parallel": true,
+      "estimated_minutes": 15,
+      "depends_on_levels": [2]
+    },
+    "4": {
+      "name": "verification",
+      "tasks": ["TASK-007"],
+      "parallel": false,
+      "estimated_minutes": 10,
+      "depends_on_levels": [3]
+    },
+    "5": {
+      "name": "quality",
+      "tasks": ["TASK-008"],
+      "parallel": false,
+      "estimated_minutes": 10,
+      "depends_on_levels": [4]
+    }
+  },
+
+  "conflict_matrix": {
+    "description": "Tasks that cannot run in parallel due to shared files",
+    "conflicts": []
+  }
+}

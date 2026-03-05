@@ -42,6 +42,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `prefers-reduced-motion` support (disables auto-rotation and transitions)
 - ARIA labels and keyboard navigation for carousel controls
 - Responsive carousel: 4 cards desktop, 2 tablet, 1 mobile
+- Interactive career knowledge graph replacing flat skills grid
+- WebGL graph rendering via Sigma.js + graphology with ForceAtlas2 layout
+- Career data model (`career-data.json`) with 90 nodes: roles, companies, skills, projects, education
+- Animated node entrance with staggered type-based appearance (1.5s duration)
+- Click-to-drill node highlighting with connected neighbor focus
+- Hover tooltips with node details (label, type, description, date range, proficiency)
+- Drag-to-reposition nodes with Sigma v3 mouse captor API
+- Zoom/pan controls (buttons, mouse wheel, pinch-to-zoom touch support)
+- Node type legend overlay (roles, companies, skills, projects, education)
+- Screen reader accessible skills list fallback (sr-only)
+- Static skills grid fallback before JavaScript loads
+- `window.__graphFilter()` API for command bar graph node filtering
+- `prefers-reduced-motion` support for graph entrance animation
+- Theme-reactive graph colors via MutationObserver on `data-theme` attribute
 
 ### Changed
 - Migrated all component colors from hardcoded values to semantic CSS variables
@@ -50,3 +64,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated CommandBar filter to use `data-filter-text` attribute when available
 - Added `marked` as project dependency for README markdown rendering
 - Added GitHub config (`github.username`) to site.json
+- Replaced Skills section with KnowledgeGraph component in index page
+- Updated CommandBar filter to highlight/dim graph nodes via `window.__graphFilter()`
+- Added `sigma`, `graphology`, `graphology-layout-forceatlas2` as project dependencies
+- Added `CareerNode`, `CareerEdge`, `CareerData` interfaces and `getCareerData()` to site data module

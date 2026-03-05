@@ -1,0 +1,276 @@
+{
+  "feature": "project-showcase",
+  "version": "2.0",
+  "generated": "2026-03-05T00:00:00Z",
+  "total_tasks": 7,
+  "estimated_duration_minutes": 85,
+  "max_parallelization": 2,
+
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Update site.json and site.ts with GitHub config",
+      "description": "Add a 'github' config object to site.json with username 'skitzo2000' and empty pinned array. Update site.ts to add GitHubConfig interface and optional github field to SiteData interface.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["content/site.json", "src/data/site.ts"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "site.json has a 'github' object with 'username': 'skitzo2000' and 'pinned': []",
+        "site.ts has GitHubConfig interface with username: string and pinned: string[]",
+        "SiteData interface has optional github?: GitHubConfig field",
+        "Existing data and types unchanged",
+        "No instances of the word 'blog'"
+      ],
+      "verification": {
+        "command": "cd /home/skitz0/Projects/skitz0.com && node -e \"const d=require('./content/site.json'); if(!d.github||d.github.username!=='skitzo2000') process.exit(1); console.log('OK')\"",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["typescript", "json"],
+      "consumers": ["TASK-003"],
+      "integration_test": null,
+      "context": "## Spec Context\nAdd to site.json: {\"github\":{\"username\":\"skitzo2000\",\"pinned\":[]}}. This goes at the top level alongside meta, about, social, skills, projects.\n\nIn site.ts, add:\n```typescript\nexport interface GitHubConfig {\n  username: string;\n  pinned: string[];\n}\n```\nAnd update SiteData to include `github?: GitHubConfig`.\n\n## Current Structure\nsite.json has: meta, about, social, skills, projects\nsite.ts exports: SiteMeta, SocialLink, Project, SkillCategory, SiteData interfaces + getSiteData()\n\n## Rules\n- The word 'blog' must NEVER appear anywhere\n- Do NOT add Co-Authored-By to git commits"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Install marked dependency",
+      "description": "Add the 'marked' npm package as a project dependency. This is the only external JS dependency allowed beyond Astro itself. It will be dynamically imported at runtime for README markdown rendering.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["package.json"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "package.json lists 'marked' as a dependency",
+        "node_modules/marked exists after install",
+        "No other new dependencies added"
+      ],
+      "verification": {
+        "command": "cd /home/skitz0/Projects/skitz0.com && node -e \"const p=require('./package.json'); if(!p.dependencies.marked) process.exit(1); console.log('marked: '+p.dependencies.marked)\"",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["npm"],
+      "consumers": ["TASK-003"],
+      "integration_test": null,
+      "context": "## Spec Context\nNFR-1: Only one external JS dependency allowed: marked for Markdown rendering.\nAC-4: marked is imported dynamically (import('marked')) only when README expansion is triggered.\nNFR-11: marked loaded lazily only when user expands a README (not on initial page load).\n\nRun: npm install marked\n\n## Rules\n- Do NOT add Co-Authored-By to git commits"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Create ProjectShowcase.astro component",
+      "description": "Create the main ProjectShowcase.astro component that replaces the static Projects section. Includes: SSG-rendered static fallback cards, client-side GitHub API fetching with localStorage caching, carousel with auto-rotation/pause/manual controls, README modal with lazy-loaded marked, skeleton loading states, language color dots, relative time display, mobile responsive layout, and full theme/accessibility support.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TASK-001", "TASK-002"],
+      "files": {
+        "create": ["src/components/ProjectShowcase.astro"],
+        "modify": [],
+        "read": ["src/components/Projects.astro", "src/components/ProjectCard.astro", "src/styles/global.css", "src/styles/themes.css", "content/site.json", "src/data/site.ts"]
+      },
+      "acceptance_criteria": [
+        "Component accepts props: projects (Project[]), githubUser (string), revealIndex (number)",
+        "Static fallback cards render from site.json projects at build time",
+        "Section has id='projects' for goto command",
+        "Cards use .card class for filter compatibility",
+        "Each card has data-filter-text attribute with name+description+language+topics",
+        "GitHub API fetched client-side from api.github.com/users/{user}/repos",
+        "Repos sorted by stars descending, then by pushed_at",
+        "localStorage cache with key 'skitz0-gh-repos' and 1-hour TTL",
+        "README cache per repo with key 'skitz0-gh-readme-{repo}' and 1-hour TTL",
+        "4 visible cards on desktop, 1-2 on mobile (<768px)",
+        "Auto-rotation every 8 seconds, pauses on hover",
+        "Previous/Next arrow buttons with keyboard accessibility",
+        "Continuous wrap (last → first)",
+        "Smooth slide transition (CSS transform)",
+        "Skeleton cards shown while fetching (animated pulse)",
+        "Click card opens README modal",
+        "marked loaded via dynamic import only on README expand",
+        "README modal has close button + Escape key dismiss",
+        "Code blocks in README styled with theme colors",
+        "README images displayed (GitHub raw URLs)",
+        "If README fetch fails, show 'README unavailable' with repo link",
+        "Loading spinner in modal while README fetches",
+        "Status indicator: 'Live from GitHub' / 'Cached' / hidden for static",
+        "All colors use CSS custom properties (no hardcoded colors except LANG_COLORS map)",
+        "prefers-reduced-motion: no auto-rotation, no slide transitions",
+        "ARIA labels on carousel controls",
+        "Screen reader announcements for rotation",
+        "No instances of the word 'blog'",
+        "Fallback: if API fails (403/network), static cards remain visible"
+      ],
+      "verification": {
+        "command": "cd /home/skitz0/Projects/skitz0.com && test -f src/components/ProjectShowcase.astro && echo 'File exists' && ! grep -i 'blog' src/components/ProjectShowcase.astro && echo 'No blog word'",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 45,
+      "skills_required": ["astro", "typescript", "css", "vanilla-js", "a11y"],
+      "consumers": ["TASK-004", "TASK-005", "TASK-006"],
+      "integration_test": "build verification in TASK-006",
+      "context": "## Architecture\nSingle Astro component with 3 sections: frontmatter (props/imports), HTML template, scoped <style>, processed <script>.\n\n## HTML Template Structure\n- <section id='projects'> wrapper with data-reveal\n- <h2> section heading: '## # personal_projects' (matches existing)\n- .showcase__viewport (overflow:hidden) > .showcase__track (flex row, translateX for sliding)\n- Static cards inside track (rendered by Astro from projects prop)\n- .showcase__nav with prev/next buttons\n- .showcase__dots for page indicators\n- .showcase__status for 'Live from GitHub' / 'Cached' indicator\n- .showcase__modal (hidden) for README display\n- .showcase__skeleton (hidden template, cloned by JS)\n\n## Card Structure (must match for filter compatibility)\nEach card uses class='card showcase__card' with:\n- .card__label ('project.sh' for static, 'github.sh' for live)\n- .card__title ('> repoName')\n- .card__desc (description)\n- .card__meta (language dot + star count + relative time)\n- .card__tags (#topic1 #topic2 #topic3)\n- .card__link ('$ cat learn_more.txt' → GitHub URL)\n- data-filter-text='name description language topic1 topic2'\n- data-repo='repoName' (for README fetch)\n\n## Client JS Sections\n1. Constants: API URL, cache keys, TTL, LANG_COLORS map\n2. Cache: getRepoCache(), setRepoCache(), getReadmeCache(), setReadmeCache()\n3. Fetcher: fetchRepos(), fetchReadme(repo)\n4. Renderer: renderGitHubCards(repos), createCardElement(repo)\n5. Carousel: currentPage, cardsPerPage, startRotation(), stopRotation(), slideTo(), next(), prev()\n6. Modal: openReadme(repo), closeReadme(), renderMarkdown(md)\n7. Utilities: timeAgo(date), getCardsPerPage()\n8. Init: checkCache → fetch/render → startCarousel\n\n## GitHub API\n- Repos: GET https://api.github.com/users/skitzo2000/repos?sort=updated&per_page=100\n- README: GET https://api.github.com/repos/skitzo2000/{repo}/readme (Accept: application/vnd.github.v3.raw)\n- Unauthenticated, 60 req/hr limit\n\n## Carousel Math\n- cardsPerPage: 4 (desktop), 2 (<1024px), 1 (<768px)\n- pageCount = Math.ceil(totalCards / cardsPerPage)\n- offset = currentPage * 100 (% of viewport)\n- track.style.transform = `translateX(-${offset}%)`\n- Card width: calc((100% - gaps) / cardsPerPage)\n\n## Existing Patterns to Follow\n- CommandBar.astro: 617 lines, single file, processed <script>\n- ProjectCard.astro: .card class, .card__title, .card__desc, .card__tags, .card__tag, .card__link\n- CSS vars: --bg-card, --border, --accent, --fg-primary, --fg-secondary, --fg-muted, --accent-glow\n- Reveal animation: data-reveal, data-reveal-index\n- Font: var(--font-mono) for headings/labels, var(--font-sans) for body\n\n## Security Rules\n- No hardcoded colors (except LANG_COLORS constant which maps language names to hex codes)\n- All user-facing text must not contain 'blog'\n- README HTML from marked must be rendered safely (marked escapes by default)\n- Do NOT add Co-Authored-By to git commits"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Update index.astro to use ProjectShowcase",
+      "description": "Replace the Projects component import and usage in index.astro with ProjectShowcase. Pass the projects array, githubUser from site.json, and revealIndex.",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["TASK-003"],
+      "files": {
+        "create": [],
+        "modify": ["src/pages/index.astro"],
+        "read": ["src/components/ProjectShowcase.astro"]
+      },
+      "acceptance_criteria": [
+        "index.astro imports ProjectShowcase instead of Projects",
+        "ProjectShowcase receives projects={site.projects}, githubUser={site.github?.username || 'skitzo2000'}, revealIndex={4}",
+        "Projects.astro import removed",
+        "No instances of the word 'blog'"
+      ],
+      "verification": {
+        "command": "cd /home/skitz0/Projects/skitz0.com && grep -c 'ProjectShowcase' src/pages/index.astro && ! grep 'import Projects ' src/pages/index.astro && echo 'OK'",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["astro"],
+      "consumers": ["TASK-006"],
+      "integration_test": "build verification in TASK-006",
+      "context": "## Current index.astro\n```astro\n---\nimport Projects from '../components/Projects.astro';\nimport { getSiteData } from '../data/site';\nconst site = getSiteData();\n---\n<Projects projects={site.projects} revealIndex={4} />\n```\n\n## Change To\n```astro\n---\nimport ProjectShowcase from '../components/ProjectShowcase.astro';\nimport { getSiteData } from '../data/site';\nconst site = getSiteData();\n---\n<ProjectShowcase projects={site.projects} githubUser={site.github?.username || 'skitzo2000'} revealIndex={4} />\n```\n\nKeep all other imports and components unchanged.\n\n## Rules\n- Do NOT add Co-Authored-By to git commits"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Update CommandBar filter for showcase cards",
+      "description": "Update the filter command in CommandBar.astro to check the data-filter-text attribute on cards when available, providing richer search that includes language and topics beyond visible text.",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["TASK-003"],
+      "files": {
+        "create": [],
+        "modify": ["src/components/CommandBar.astro"],
+        "read": ["src/components/ProjectShowcase.astro"]
+      },
+      "acceptance_criteria": [
+        "Filter function checks data-filter-text attribute on .card elements first",
+        "Falls back to child element text if data-filter-text not present",
+        "Existing skill filtering unchanged",
+        "Filter works with both static fallback cards and GitHub-sourced cards",
+        "No instances of the word 'blog'"
+      ],
+      "verification": {
+        "command": "cd /home/skitz0/Projects/skitz0.com && grep -c 'data-filter-text' src/components/CommandBar.astro && echo 'OK'",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["typescript", "vanilla-js"],
+      "consumers": ["TASK-006"],
+      "integration_test": "build verification in TASK-006",
+      "context": "## Current Filter Logic (CommandBar.astro lines 307-347)\nThe filter command selects '.card' elements and checks child text:\n```javascript\ncards.forEach(function(el) {\n  const title = el.querySelector('.card__title')?.textContent || '';\n  const desc = el.querySelector('.card__desc')?.textContent || '';\n  const tags = el.querySelector('.card__tags')?.textContent || '';\n  const text = (title + ' ' + desc + ' ' + tags).toLowerCase();\n  if (text.includes(keyword)) {\n    el.classList.add('cmd-highlight');\n    matchCount++;\n  } else {\n    el.classList.add('cmd-dim');\n  }\n});\n```\n\n## Updated Logic\nChange the card filtering to prefer data-filter-text when available:\n```javascript\ncards.forEach(function(el) {\n  const filterAttr = el.getAttribute('data-filter-text');\n  var text;\n  if (filterAttr) {\n    text = filterAttr.toLowerCase();\n  } else {\n    const title = el.querySelector('.card__title')?.textContent || '';\n    const desc = el.querySelector('.card__desc')?.textContent || '';\n    const tags = el.querySelector('.card__tags')?.textContent || '';\n    text = (title + ' ' + desc + ' ' + tags).toLowerCase();\n  }\n  if (text.includes(keyword)) {\n    el.classList.add('cmd-highlight');\n    matchCount++;\n  } else {\n    el.classList.add('cmd-dim');\n  }\n});\n```\n\nThis is a small, surgical change. Only modify the cards.forEach block.\n\n## Rules\n- Do NOT add Co-Authored-By to git commits"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Build verification and acceptance testing",
+      "description": "Run npx astro build to verify the complete integration compiles. Check all acceptance criteria: no 'blog' word, no hardcoded colors in ProjectShowcase (except LANG_COLORS), marked not in initial bundle, all theme CSS variables used.",
+      "phase": "verification",
+      "level": 4,
+      "dependencies": ["TASK-004", "TASK-005"],
+      "files": {
+        "create": [],
+        "modify": [],
+        "read": ["src/components/ProjectShowcase.astro", "src/pages/index.astro", "src/components/CommandBar.astro", "content/site.json", "src/data/site.ts"]
+      },
+      "acceptance_criteria": [
+        "npx astro build exits with code 0",
+        "Zero instances of 'blog' in src/ and content/ directories",
+        "ProjectShowcase.astro has id='projects' on section element",
+        "site.json has github.username = 'skitzo2000'",
+        "package.json has marked dependency",
+        "index.astro uses ProjectShowcase (not Projects)",
+        "CommandBar filter checks data-filter-text"
+      ],
+      "verification": {
+        "command": "cd /home/skitz0/Projects/skitz0.com && npx astro build 2>&1 && echo 'BUILD OK' && grep -ri 'blog' src/ content/ --include='*.astro' --include='*.ts' --include='*.json' --include='*.css' | wc -l",
+        "timeout_seconds": 120
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["astro", "testing"],
+      "consumers": ["TASK-007"],
+      "integration_test": null,
+      "context": "## Verification Steps\n1. Run `npx astro build` — must exit 0\n2. Check for 'blog' word: `grep -ri 'blog' src/ content/ --include='*.astro' --include='*.ts' --include='*.json' --include='*.css'` — must return 0 results\n3. Check ProjectShowcase has id='projects': `grep 'id=\"projects\"' src/components/ProjectShowcase.astro`\n4. Check site.json: `node -e \"const d=require('./content/site.json'); console.log(d.github.username)\"` — must print 'skitzo2000'\n5. Check marked: `node -e \"const p=require('./package.json'); console.log(p.dependencies.marked)\"` — must print version\n6. Check index.astro: `grep 'ProjectShowcase' src/pages/index.astro` — must match\n7. Check CommandBar filter: `grep 'data-filter-text' src/components/CommandBar.astro` — must match\n\nIf build fails, read the error output and fix the issue in the relevant file.\n\n## Rules\n- Do NOT add Co-Authored-By to git commits"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Update CHANGELOG.md",
+      "description": "Add entries under [Unreleased] for all changes in the project-showcase feature. Use 'Added' and 'Changed' categories.",
+      "phase": "quality",
+      "level": 5,
+      "dependencies": ["TASK-006"],
+      "files": {
+        "create": [],
+        "modify": ["CHANGELOG.md"],
+        "read": [".gsd/specs/project-showcase/requirements.md"]
+      },
+      "acceptance_criteria": [
+        "CHANGELOG.md [Unreleased] section updated with project showcase entries",
+        "Entries cover: GitHub API fetching, carousel, README modal, caching, skeleton states, fallback behavior, filter integration, marked dependency",
+        "No instances of the word 'blog'",
+        "Uses 'Added' and 'Changed' categories"
+      ],
+      "verification": {
+        "command": "cd /home/skitz0/Projects/skitz0.com && grep -c 'showcase\\|carousel\\|GitHub.*repo\\|README.*modal\\|marked' CHANGELOG.md",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["documentation"],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## CHANGELOG Format\nAdd under the existing [Unreleased] section. Current entries cover theme engine and command bar.\n\n### Added\n- GitHub-sourced project showcase replacing static project cards\n- Client-side GitHub API fetching with localStorage caching (1-hour TTL)\n- Auto-rotating project carousel (8-second interval, pause on hover)\n- Previous/Next navigation arrows for manual carousel control\n- README modal with lazy-loaded `marked` markdown rendering\n- Skeleton loading state with animated pulse placeholders\n- Language color indicators on project cards\n- Star count and relative time display on project cards\n- Topic tags (top 3) on project cards\n- \"Live from GitHub\" / \"Cached\" status indicator\n- `data-filter-text` attribute on showcase cards for enhanced filtering\n- `prefers-reduced-motion` support (disables auto-rotation and transitions)\n- ARIA labels and keyboard navigation for carousel controls\n- Responsive carousel: 4 cards desktop, 2 tablet, 1 mobile\n\n### Changed\n- Replaced static Projects section with dynamic ProjectShowcase component\n- Updated CommandBar filter to use `data-filter-text` attribute when available\n- Added `marked` as project dependency for README markdown rendering\n- Added GitHub config (`github.username`) to site.json\n\n## Rules\n- Do NOT add Co-Authored-By to git commits\n- No instances of the word 'blog'"
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["TASK-001", "TASK-002"],
+      "parallel": true,
+      "estimated_minutes": 5
+    },
+    "2": {
+      "name": "core",
+      "tasks": ["TASK-003"],
+      "parallel": false,
+      "estimated_minutes": 45
+    },
+    "3": {
+      "name": "integration",
+      "tasks": ["TASK-004", "TASK-005"],
+      "parallel": true,
+      "estimated_minutes": 10
+    },
+    "4": {
+      "name": "verification",
+      "tasks": ["TASK-006"],
+      "parallel": false,
+      "estimated_minutes": 10,
+      "depends_on_levels": [3]
+    },
+    "5": {
+      "name": "quality",
+      "tasks": ["TASK-007"],
+      "parallel": false,
+      "estimated_minutes": 5,
+      "depends_on_levels": [4]
+    }
+  },
+
+  "conflict_matrix": {
+    "description": "Tasks that cannot run in parallel due to shared files",
+    "conflicts": []
+  }
+}

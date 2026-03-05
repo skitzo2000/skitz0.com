@@ -1,0 +1,203 @@
+{
+  "feature": "hybrid-command-bar",
+  "version": "2.0",
+  "generated": "2026-03-05T00:00:00Z",
+  "total_tasks": 6,
+  "estimated_duration_minutes": 115,
+  "max_parallelization": 2,
+
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Create easter egg command data bank",
+      "description": "Create content/commands.json with 75 unique commands, each having 5-10 humorous response variants. Commands span: shell basics (ls, cat, man, pwd, cd, echo, touch, rm, cp, mv, mkdir, chmod, chown, find, grep), system (top, ps, kill, uptime, free, df, date, cal, hostname, uname), network (ping, ssh, curl, wget, nslookup, traceroute, ifconfig, netstat, dig), git (git blame, git push, git commit, git pull, git stash, git rebase, git merge, git log), editors (nano, vim, emacs, code), package managers (apt install, brew install, npm install, pip install, cargo install), devops (docker run, kubectl, terraform apply, ansible-playbook, make, systemctl), languages (python, node, go run, rustc, gcc, java), classics (sudo rm -rf /, sudo, exit, logout, shutdown, reboot, fortune, cowsay, sl, alias), fun (matrix, hack, 42, hello world, xkcd, lol, pls, fml, yolo, bruh). Humor sources: Star Wars, Back to the Future, MST3K, Monty Python, Spaceballs, Hitchhiker's Guide, Portal/GLaDOS, Office Space, IT Crowd, Silicon Valley, XKCD, classic computing (BSOD, segfaults, Y2K), programming memes. CRITICAL: The word 'blog' must NEVER appear in any response.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": ["content/commands.json"],
+        "modify": [],
+        "read": [".gsd/specs/hybrid-command-bar/requirements.md"]
+      },
+      "verification": {
+        "command": "node -e \"const d=require('./content/commands.json'); const cmds=Object.keys(d.commands); console.log('Commands:',cmds.length); if(cmds.length<60) process.exit(1); cmds.forEach(c=>{const r=d.commands[c].responses; if(r.length<5){console.error(c,'has',r.length,'responses'); process.exit(1)}}); if(JSON.stringify(d).toLowerCase().includes('blog')){console.error('Contains blog!'); process.exit(1)}; console.log('PASS')\"",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 30,
+      "skills_required": ["content-authoring", "json"],
+      "consumers": ["TASK-003"],
+      "integration_test": "Build verification in TASK-005",
+      "context": "## Spec Context\nCreate the full easter egg response bank for the command bar. Each command is a key in commands.commands, with a responses array of 5-10 string variants. Include meta.version (1) and meta.humor_sources array. Response content must span: Star Wars, Back to the Future, MST3K, Monty Python, Spaceballs, Hitchhiker's Guide, Portal/GLaDOS, Office Space, IT Crowd, Silicon Valley, XKCD references, classic computing jokes (BSOD, segfaults, Y2K), general programming memes. Use \\n for multi-line responses. Keep responses concise (1-3 lines typically). Some commands like 'sudo rm -rf /' use the full phrase as the key. CRITICAL CONSTRAINT: The word 'blog' must NEVER appear anywhere in any response string.\n\n## Data Schema\n{\"commands\":{\"ls\":{\"responses\":[\"...\",\"...\"]},\"sudo rm -rf /\":{\"responses\":[\"...\",\"...\"]}},\"meta\":{\"version\":1,\"humor_sources\":[...]}}\n\n## Full Command List (75)\nShell: ls, cat, man, pwd, cd, echo, touch, rm, cp, mv, mkdir, chmod, chown, find, grep\nSystem: top, ps, kill, uptime, free, df, date, cal, hostname, uname\nNetwork: ping, ssh, curl, wget, nslookup, traceroute, ifconfig, netstat, dig\nGit: git blame, git push, git commit, git pull, git stash, git rebase, git merge, git log\nEditors: nano, vim, emacs, code\nPackage managers: apt install, brew install, npm install, pip install, cargo install\nDevOps: docker run, kubectl, terraform apply, ansible-playbook, make, systemctl\nLanguages: python, node, go run, rustc, gcc, java\nClassics: sudo rm -rf /, sudo, exit, logout, shutdown, reboot, fortune, cowsay, sl, alias\nFun: matrix, hack, 42, hello world, xkcd, lol, pls, fml, yolo, bruh"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Add section ID attributes for goto targets",
+      "description": "Add id attributes to the section/header elements in 4 component files so the goto command can scroll to them. Add id='about' to the <section> in About.astro, id='social' to the <section> in SocialLinks.astro, id='skills' to the <section> in Skills.astro, and id='projects' to the <section> in Projects.astro. The 'top' target does not need an ID — goto will use scrollTo(0,0).",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": [
+          "src/components/About.astro",
+          "src/components/SocialLinks.astro",
+          "src/components/Skills.astro",
+          "src/components/Projects.astro"
+        ],
+        "read": []
+      },
+      "verification": {
+        "command": "grep -c 'id=\"about\"' src/components/About.astro && grep -c 'id=\"social\"' src/components/SocialLinks.astro && grep -c 'id=\"skills\"' src/components/Skills.astro && grep -c 'id=\"projects\"' src/components/Projects.astro",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["astro", "html"],
+      "consumers": ["TASK-003"],
+      "integration_test": "Build verification in TASK-005",
+      "context": "## Spec Context\nThe goto command (FR-26 through FR-29) needs to smooth-scroll to sections: top, about, social, skills, projects. The existing section elements have classes but no id attributes. Add id attributes to each section element.\n\n## Changes Required\n- src/components/About.astro line 10: <section class=\"about\" → <section id=\"about\" class=\"about\"\n- src/components/SocialLinks.astro line 12: <section class=\"social\" → <section id=\"social\" class=\"social\"\n- src/components/Skills.astro line 12: <section class=\"skills\" → <section id=\"skills\" class=\"skills\"\n- src/components/Projects.astro line 13: <section class=\"projects\" → <section id=\"projects\" class=\"projects\"\n\nDo NOT modify Hero.astro — the 'top' target uses window.scrollTo(0,0) instead."
+    },
+    {
+      "id": "TASK-003",
+      "title": "Create CommandBar.astro component",
+      "description": "Create the full command bar component as a single Astro file: src/components/CommandBar.astro. This is the main implementation task containing HTML template, scoped CSS (theme-aware), and a processed <script> tag with all client-side logic. The script imports commands.json at build time. Implements: command bar overlay UI (FR-1 through FR-13), command registry with 7 core commands (theme, goto, filter, help, whoami, clear, history), easter egg matching engine with response rotation (FR-14 through FR-20), filter DOM manipulation (FR-21 through FR-25), goto smooth scroll (FR-26 through FR-29), command history with sessionStorage (FR-8), tab completion (FR-9), output buffer (FR-5/FR-6), focus trap (FR-12), rich output formatting (FR-13), mobile floating button (FR-10), first-visit hint (FR-11), window.__terminal API, custom events (terminal:open/close/command). All colors must use semantic CSS variables. Zero external dependencies. Must respect prefers-reduced-motion.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TASK-001", "TASK-002"],
+      "files": {
+        "create": ["src/components/CommandBar.astro"],
+        "modify": [],
+        "read": [
+          "content/commands.json",
+          "src/layouts/Layout.astro",
+          "src/styles/themes.css",
+          "src/styles/global.css",
+          "src/components/Skills.astro",
+          "src/components/Projects.astro",
+          "src/components/ProjectCard.astro",
+          ".gsd/specs/hybrid-command-bar/requirements.md",
+          ".gsd/specs/hybrid-command-bar/design.md"
+        ]
+      },
+      "verification": {
+        "command": "test -f src/components/CommandBar.astro && grep -q 'window.__terminal' src/components/CommandBar.astro && grep -q 'role=\"dialog\"' src/components/CommandBar.astro && grep -q 'commands.json' src/components/CommandBar.astro && echo 'PASS'",
+        "timeout_seconds": 15
+      },
+      "estimate_minutes": 60,
+      "skills_required": ["astro", "javascript", "css", "accessibility"],
+      "consumers": ["TASK-004"],
+      "integration_test": "Build verification in TASK-005",
+      "context": "## Spec Context\nAC-1: Single Astro component with client-side <script> tag.\nAC-2: Easter egg data in content/commands.json — import at build time via processed <script>.\nAC-3: Command registry pattern — each command is a handler function in a registry object.\nAC-5: Integration with existing window.__theme API.\nAC-6: Filter adds/removes CSS classes, does not modify DOM structure.\nAC-7: Mobile floating button hidden on desktop via media query.\n\nNFR-1: Zero external JS dependencies.\nNFR-5: All colors use semantic CSS variables from theme engine.\nNFR-6: ARIA roles (role=dialog, aria-label), focus trap, screen reader announcements.\nNFR-7: prefers-reduced-motion disables animations.\nNFR-9: The word 'blog' must NEVER appear.\n\n## Key Implementation Details\n\n### HTML: Command bar overlay (hidden by default), output area (role=log, aria-live=polite), input row with prompt (visitor@skitz0.com:~$), mobile FAB button, first-visit hint toast.\n\n### CSS: position fixed inset 0 z-index 9000, font-family var(--font-mono), all colors via semantic vars. Mobile button visible only below 768px. Filter classes (.cmd-highlight, .cmd-dim) use :global().\n\n### JS Architecture:\n- Import commands.json\n- Command registry: { theme, goto, filter, help, whoami, clear, history }\n- Easter egg engine: matchCommand (exact > prefix > word, case-insensitive), rotateResponses (random subset on load, setInterval 3min)\n- UI: open/close/toggle, appendOutput, trimOutput (100 lines), autoScroll\n- Input: Enter=execute, ArrowUp/Down=history, Tab=completion, Escape=close\n- Shortcuts: '/' (when not in input/textarea), Ctrl+K/Cmd+K\n- API: window.__terminal = { open, close, toggle, run, isOpen }\n- Events: terminal:open, terminal:close, terminal:command\n- First-visit: check localStorage 'skitz0-hint-seen'\n- History: sessionStorage 'skitz0-cmd-history', max 50\n\n### Goto targets: #about, #social, #skills, #projects, 'top' = scrollTo(0,0)\n### Filter targets: .skills__item elements, .card elements (check .card__title, .card__desc, .card__tags text)\n\n### whoami output (always the same, no rotation):\n+---------------------------------------------------+\n|  skitz0 -- Senior Linux Cloud Engineer            |\n|  Core member & instructor @ HackersGuildPGH       |\n|                                                   |\n|  We like to take things apart                     |\n|  and see how they work.                           |\n|                                                   |\n|  Hobbies include: breaking prod at 4am,           |\n|  3D printing things nobody asked for,             |\n|  and mass: \"It works on my machine\"               |\n|                                                   |\n|  PGP: Don't ask. I lost the key.                  |\n+---------------------------------------------------+\n\n## Dependencies\nTASK-001 creates content/commands.json (schema: {commands: {name: {responses: string[]}}, meta: {version, humor_sources}})\nTASK-002 adds id attributes to section elements (about, social, skills, projects)"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Integrate CommandBar into Layout",
+      "description": "Modify src/layouts/Layout.astro to import and render the CommandBar component. Add the import statement in the frontmatter and render <CommandBar /> as the last element before </body> (after <slot />). Per AC-4, the command bar DOM is injected into Layout.astro before </body>.",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["TASK-003"],
+      "files": {
+        "create": [],
+        "modify": ["src/layouts/Layout.astro"],
+        "read": ["src/components/CommandBar.astro"]
+      },
+      "verification": {
+        "command": "grep -q 'CommandBar' src/layouts/Layout.astro && grep -q 'import CommandBar' src/layouts/Layout.astro && echo 'PASS'",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["astro"],
+      "consumers": ["TASK-005"],
+      "integration_test": "Build verification in TASK-005",
+      "context": "## Spec Context\nAC-4: The command bar DOM is injected into Layout.astro (before </body>).\n\n## Changes Required\n1. Add import in frontmatter: import CommandBar from '../components/CommandBar.astro';\n2. Add <CommandBar /> after <slot /> and before </body>\n\n## Current Layout.astro Structure\nFrontmatter imports global.css, defines Props interface.\nHead contains inline theme init script, meta tags, font preconnects.\nBody contains: skip-link, grain div, <slot />\n\n## Dependencies\nTASK-003 creates src/components/CommandBar.astro"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Build verification and audit",
+      "description": "Run npx astro build to verify the full site builds successfully. Check that: (1) build succeeds with zero errors, (2) no file in content/ or src/ contains the word 'blog' (case-insensitive grep), (3) commands.json has 60+ commands with 5+ responses each, (4) CommandBar.astro uses semantic CSS variables (no hardcoded hex colors), (5) the output JS bundle is reasonable size. Report any issues found.",
+      "phase": "verification",
+      "level": 4,
+      "dependencies": ["TASK-004"],
+      "files": {
+        "create": [],
+        "modify": [],
+        "read": [
+          "content/commands.json",
+          "src/components/CommandBar.astro"
+        ]
+      },
+      "verification": {
+        "command": "npx astro build 2>&1 && echo 'BUILD PASS' && ! grep -ri 'blog' content/commands.json src/components/CommandBar.astro && echo 'BLOG CHECK PASS'",
+        "timeout_seconds": 120
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["astro", "verification"],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## Verification Steps\n1. npx astro build — must exit 0\n2. grep -ri 'blog' content/ src/ — must find nothing\n3. Validate commands.json: 60+ commands, 5+ responses each\n4. Check CommandBar.astro for hardcoded hex colors (should use CSS vars)\n5. Check JS bundle size in dist/ output"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Update CHANGELOG.md",
+      "description": "Update CHANGELOG.md [Unreleased] section with entries for the hybrid command bar feature. Add under 'Added' category: command bar overlay with keyboard shortcuts, 7 core commands (theme, goto, filter, help, whoami, clear, history), 75 easter egg commands with rotating responses, window.__terminal API, custom events, mobile floating trigger, first-visit hint, tab completion, command history, filter highlighting, section IDs for goto navigation.",
+      "phase": "quality",
+      "level": 5,
+      "dependencies": ["TASK-005"],
+      "files": {
+        "create": [],
+        "modify": ["CHANGELOG.md"],
+        "read": []
+      },
+      "verification": {
+        "command": "grep -q 'command bar' CHANGELOG.md && grep -q '__terminal' CHANGELOG.md && echo 'PASS'",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["documentation"],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## Spec Context\nUpdate the existing CHANGELOG.md (Keep a Changelog format) under [Unreleased] > Added.\n\n## Entries to Add\n- Hybrid command bar with `/` and `Ctrl+K`/`Cmd+K` keyboard shortcuts\n- Core commands: `theme`, `goto`, `filter`, `help`, `whoami`, `clear`, `history`\n- 75 easter egg commands with rotating humorous response variants\n- `window.__terminal` API (`open`, `close`, `toggle`, `run`, `isOpen`) for programmatic access\n- Custom events: `terminal:open`, `terminal:close`, `terminal:command`\n- Mobile floating terminal trigger button\n- First-visit hint toast\n- Tab completion for command names\n- Command history via up/down arrows (sessionStorage)\n- Content filter with highlight/dim on skills and projects\n- Section ID attributes for goto navigation (`about`, `social`, `skills`, `projects`)\n- Scrollable output history with 100-line buffer\n- Rich output formatting (ASCII art, tables)"
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["TASK-001", "TASK-002"],
+      "parallel": true,
+      "estimated_minutes": 30
+    },
+    "2": {
+      "name": "core",
+      "tasks": ["TASK-003"],
+      "parallel": false,
+      "estimated_minutes": 60,
+      "depends_on_levels": [1]
+    },
+    "3": {
+      "name": "integration",
+      "tasks": ["TASK-004"],
+      "parallel": false,
+      "estimated_minutes": 10,
+      "depends_on_levels": [2]
+    },
+    "4": {
+      "name": "verification",
+      "tasks": ["TASK-005"],
+      "parallel": false,
+      "estimated_minutes": 10,
+      "depends_on_levels": [3]
+    },
+    "5": {
+      "name": "quality",
+      "tasks": ["TASK-006"],
+      "parallel": false,
+      "estimated_minutes": 5,
+      "depends_on_levels": [4]
+    }
+  },
+
+  "conflict_matrix": {
+    "description": "Tasks that cannot run in parallel due to shared files",
+    "conflicts": []
+  }
+}

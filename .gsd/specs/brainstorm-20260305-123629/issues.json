@@ -1,0 +1,38 @@
+[
+  {
+    "number": 1,
+    "title": "Terminal theme engine with Ghostty-compatible themes",
+    "url": "https://github.com/skitzo2000/skitz0.com/issues/1",
+    "priority": "P0",
+    "labels": ["enhancement", "P0"],
+    "dependencies": [],
+    "effort": "medium"
+  },
+  {
+    "number": 2,
+    "title": "Hybrid command bar with terminal commands and easter eggs",
+    "url": "https://github.com/skitzo2000/skitz0.com/issues/2",
+    "priority": "P0",
+    "labels": ["enhancement", "P0"],
+    "dependencies": [1],
+    "effort": "large"
+  },
+  {
+    "number": 3,
+    "title": "Interactive career knowledge graph (Sigma.js/WebGL)",
+    "url": "https://github.com/skitzo2000/skitz0.com/issues/3",
+    "priority": "P1",
+    "labels": ["enhancement", "P1"],
+    "dependencies": [1, 2],
+    "effort": "large"
+  },
+  {
+    "number": 4,
+    "title": "GitHub-sourced rotating project showcase (client-side)",
+    "url": "https://github.com/skitzo2000/skitz0.com/issues/4",
+    "priority": "P1",
+    "labels": ["enhancement", "P1"],
+    "dependencies": [1, 2],
+    "effort": "medium"
+  }
+]

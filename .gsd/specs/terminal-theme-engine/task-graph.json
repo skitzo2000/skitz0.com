@@ -1,0 +1,156 @@
+{
+  "feature": "terminal-theme-engine",
+  "version": "2.0",
+  "generated": "2026-03-05T13:00:00Z",
+  "total_tasks": 5,
+  "estimated_duration_minutes": 70,
+  "max_parallelization": 2,
+
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Create theme definitions CSS",
+      "description": "Create src/styles/themes.css with all 5 Ghostty-sourced theme definitions. Each theme block includes: raw palette (--palette-0 through --palette-15), theme-specific vars (--theme-bg, --theme-fg, --theme-cursor, --theme-cursor-text, --theme-selection-bg, --theme-selection-fg), semantic aliases (--bg-base, --bg-elevated, --bg-card, --bg-hover, --fg-primary, --fg-secondary, --fg-muted, --accent, --accent-dim, --accent-glow, --border, --border-focus, --selection-bg, --selection-fg), and grain vars (--grain-opacity, --grain-invert). The :root block uses Duotone Dark as default. Each [data-theme] block overrides all variables.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": ["src/styles/themes.css"],
+        "modify": [],
+        "read": [".gsd/specs/terminal-theme-engine/requirements.md"]
+      },
+      "verification": {
+        "command": "test -f src/styles/themes.css && grep -c 'data-theme' src/styles/themes.css",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 20,
+      "skills_required": ["css"],
+      "consumers": ["TASK-003"],
+      "integration_test": "TASK-004 build verification",
+      "context": "## Spec Context\nCreate themes.css with 5 themes sourced from Ghostty terminal theme files.\n\n### Color Data (from requirements.md Section 4)\n\nDuotone Dark (default):\n  palette 0-15: #1f1d27, #d9393e, #2dcd73, #d9b76e, #ffc284, #de8d40, #2488ff, #b7a1ff, #4e4a60, #d9393e, #2dcd73, #d9b76e, #ffc284, #de8d40, #2488ff, #eae5ff\n  bg: #1f1d27, fg: #b7a1ff, cursor: #ff9839, cursor-text: #1f1d27\n  selection-bg: #353147, selection-fg: #b7a2ff\n\nFlexoki Light:\n  palette 0-15: #100f0f, #af3029, #66800b, #ad8301, #205ea6, #a02f6f, #24837b, #6f6e69, #b7b5ac, #d14d41, #879a39, #d0a215, #4385be, #ce5d97, #3aa99f, #cecdc3\n  bg: #fffcf0, fg: #100f0f, cursor: #100f0f, cursor-text: #fffcf0\n  selection-bg: #cecdc3, selection-fg: #100f0f\n\nHomebrew:\n  palette 0-15: #000000, #990000, #00a600, #999900, #0d0dbf, #b200b2, #00a6b2, #bfbfbf, #666666, #e50000, #00d900, #e5e500, #0000ff, #e500e5, #00e5e5, #e5e5e5\n  bg: #000000, fg: #00ff00, cursor: #23ff18, cursor-text: #ff0018\n  selection-bg: #083905, selection-fg: #ffffff\n\nDracula:\n  palette 0-15: #21222c, #ff5555, #50fa7b, #f1fa8c, #bd93f9, #ff79c6, #8be9fd, #f8f8f2, #6272a4, #ff6e6e, #69ff94, #ffffa5, #d6acff, #ff92df, #a4ffff, #ffffff\n  bg: #282a36, fg: #f8f8f2, cursor: #f8f8f2, cursor-text: #282a36\n  selection-bg: #44475a, selection-fg: #ffffff\n\nNord:\n  palette 0-15: #3b4252, #bf616a, #a3be8c, #ebcb8b, #81a1c1, #b48ead, #88c0d0, #e5e9f0, #596377, #bf616a, #a3be8c, #ebcb8b, #81a1c1, #b48ead, #8fbcbb, #eceff4\n  bg: #2e3440, fg: #d8dee9, cursor: #eceff4, cursor-text: #282828\n  selection-bg: #eceff4, selection-fg: #4c566a\n\n### CSS Variable Schema (from requirements.md Section 2.2)\nRaw palette: --palette-0 through --palette-15\nTheme vars: --theme-bg, --theme-fg, --theme-cursor, --theme-cursor-text, --theme-selection-bg, --theme-selection-fg\nSemantic aliases: --bg-base (→ --theme-bg), --bg-elevated (derived), --bg-card (derived), --bg-hover (derived), --fg-primary (→ --theme-fg), --fg-secondary (→ --palette-7), --fg-muted (→ --palette-8), --accent (→ --palette-2 or theme-specific), --accent-dim (derived), --accent-glow (accent @ 15% alpha), --border (derived from bg), --border-focus (→ accent), --selection-bg (→ --theme-selection-bg), --selection-fg (→ --theme-selection-fg)\nGrain vars: --grain-opacity (dark ~0.04, light ~0.03), --grain-invert (0 for dark, 1 for light)\n\n### Structure\n:root block = Duotone Dark defaults\n[data-theme=\"duotone-dark\"] = same as :root (explicit)\n[data-theme=\"flexoki-light\"] = light theme\n[data-theme=\"homebrew\"] = green-on-black\n[data-theme=\"dracula\"] = Dracula colors\n[data-theme=\"nord\"] = Nord colors\n\nDerived colors strategy: hardcode per theme (no runtime color math). Dark themes: lighten bg. Light themes: darken bg."
+    },
+    {
+      "id": "TASK-002",
+      "title": "Add theme init script to Layout.astro",
+      "description": "Modify src/layouts/Layout.astro to add an inline <script> in <head> that: (1) reads localStorage('skitz0-theme'), (2) falls back to prefers-color-scheme (light → flexoki-light, dark → duotone-dark), (3) sets document.documentElement.dataset.theme before body renders, (4) exposes window.__theme = { set(name), get(), list() }. The set() function must also add/remove '.theme-transitioning' class with a 100ms timeout. Use is:inline on the script tag for Astro. Use try/catch around localStorage for privacy mode. Valid theme names: duotone-dark, flexoki-light, homebrew, dracula, nord.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["src/layouts/Layout.astro"],
+        "read": [".gsd/specs/terminal-theme-engine/requirements.md"]
+      },
+      "verification": {
+        "command": "grep -c 'window.__theme' src/layouts/Layout.astro",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 15,
+      "skills_required": ["javascript", "astro"],
+      "consumers": ["TASK-004"],
+      "integration_test": "TASK-004 build verification",
+      "context": "## Spec Context\nFR-11: Persist theme in localStorage under 'skitz0-theme'\nFR-12: On load, check localStorage first; if empty, prefers-color-scheme: light → Flexoki Light, dark/no pref → Duotone Dark\nFR-13: Apply before first paint via inline <script> in <head>\nFR-14/15: Transition via .theme-transitioning class, < 100ms\nNFR-2: No FOUC\n\n## Public API (Section 9 of requirements)\nwindow.__theme = {\n  set(name: string): boolean  // Apply theme, persist, return success\n  get(): string               // Return current theme name\n  list(): string[]             // Return available theme names\n}\n\n## Current Layout.astro Structure\nImports global.css in frontmatter. Has <html lang=\"en\"><head>...</head><body> with skip-link, grain div, and <slot/>.\n\nKey implementation notes:\n- Use is:inline on <script> tag so Astro doesn't bundle it (must run synchronously in head)\n- Script must be BEFORE the CSS link tags to execute before paint\n- Use var (not const/let) for IE-safe syntax (though not required, keeps it minimal)\n- try/catch localStorage for incognito/privacy browsers\n- set() should: validate name against THEMES array, update dataset.theme, save to localStorage, add .theme-transitioning class, setTimeout 100ms to remove it, return true/false"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Refactor global.css for theme support",
+      "description": "Modify src/styles/global.css to: (1) Add @import './themes.css' after the font import, (2) Remove all color variable declarations from :root (they now live in themes.css), (3) Keep non-color tokens in :root (typography, spacing, layout, motion, radius), (4) Update ::selection to use var(--selection-bg) and var(--selection-fg), (5) Update .grain to use opacity: var(--grain-opacity, 0.04) and add filter: invert(var(--grain-invert, 0)), (6) Add .theme-transitioning rules for smooth color transitions with !important, (7) Add prefers-reduced-motion rule to disable theme transitions.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TASK-001"],
+      "files": {
+        "create": [],
+        "modify": ["src/styles/global.css"],
+        "read": ["src/styles/themes.css"]
+      },
+      "verification": {
+        "command": "grep -c 'themes.css' src/styles/global.css && ! grep -q '#0c0e0f\\|#131618\\|#181b1e\\|#84cc16' src/styles/global.css",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 20,
+      "skills_required": ["css"],
+      "consumers": ["TASK-004"],
+      "integration_test": "TASK-004 build verification",
+      "context": "## Spec Context\nFR-7: All existing components must use only semantic CSS variables (no hardcoded colors)\nFR-14: Theme switch transition < 100ms\nFR-15: .theme-transitioning class enables transitions only during switch\nFR-16/17: Grain overlay theme-aware via --grain-opacity and --grain-invert\nNFR-5: prefers-reduced-motion disables theme transitions\n\n## Current global.css Color Vars to REMOVE from :root\n--bg-base: #0c0e0f\n--bg-elevated: #131618\n--bg-card: #181b1e\n--bg-hover: #1e2226\n--fg-primary: #e6e9ec\n--fg-secondary: #9ca3af\n--fg-muted: #6b7280\n--accent: #84cc16\n--accent-dim: #65a30d\n--accent-glow: rgba(132, 204, 22, 0.15)\n--border: #272b30\n--border-focus: var(--accent)\n\nThese all move to themes.css. Keep all non-color vars in :root.\n\n## Changes to existing rules\n::selection → use var(--selection-bg) and var(--selection-fg) instead of --accent-glow and --accent\n.grain → add opacity: var(--grain-opacity, 0.04) and filter: invert(var(--grain-invert, 0))\n\n## New rules to add\n.theme-transitioning * { transition: color 80ms ease, background-color 80ms ease, border-color 80ms ease, box-shadow 80ms ease !important; }\n@media (prefers-reduced-motion: reduce) { .theme-transitioning * { transition: none !important; } }\n\n## Dependencies\nTASK-001 creates themes.css which this file imports."
+    },
+    {
+      "id": "TASK-004",
+      "title": "Build verification and component audit",
+      "description": "Verify the complete theme engine works: (1) Run 'npx astro build' and confirm success, (2) Run 'npx astro check' if available, (3) Grep all component files for hardcoded hex colors (grep -rn '#[0-9a-fA-F]' src/components/) — there should be none, (4) Verify themes.css contains all 5 theme blocks, (5) Verify Layout.astro has the inline script with window.__theme, (6) Verify global.css imports themes.css and has no hardcoded color values in :root.",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["TASK-002", "TASK-003"],
+      "files": {
+        "create": [],
+        "modify": [],
+        "read": ["src/styles/themes.css", "src/styles/global.css", "src/layouts/Layout.astro", "src/components/Hero.astro", "src/components/About.astro", "src/components/Skills.astro", "src/components/Projects.astro", "src/components/ProjectCard.astro", "src/components/SocialLinks.astro"]
+      },
+      "verification": {
+        "command": "npx astro build 2>&1 | tail -5",
+        "timeout_seconds": 120
+      },
+      "estimate_minutes": 15,
+      "skills_required": ["astro", "testing"],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## Verification Checklist\n1. npx astro build succeeds\n2. No hardcoded hex colors in src/components/ files\n3. themes.css has 5 [data-theme] blocks\n4. Layout.astro has inline script with window.__theme\n5. global.css imports themes.css, no color vars in :root\n6. ::selection uses --selection-bg/--selection-fg\n7. .grain uses --grain-opacity and --grain-invert\n8. .theme-transitioning class exists\n9. prefers-reduced-motion rule covers theme transitions"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Create CHANGELOG.md",
+      "description": "Create CHANGELOG.md with an [Unreleased] section documenting all changes from the terminal theme engine feature. Categories: Added (theme engine, 5 themes, window.__theme API, theme-aware grain, FOUC prevention, theme transitions).",
+      "phase": "quality",
+      "level": 4,
+      "dependencies": ["TASK-004"],
+      "files": {
+        "create": ["CHANGELOG.md"],
+        "modify": [],
+        "read": []
+      },
+      "verification": {
+        "command": "test -f CHANGELOG.md && grep -c 'Unreleased' CHANGELOG.md",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 10,
+      "skills_required": [],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## CHANGELOG Format\nUse Keep a Changelog format. Add entries under [Unreleased] for:\n### Added\n- Terminal theme engine with 5 Ghostty-sourced themes (Duotone Dark, Flexoki Light, Homebrew, Dracula, Nord)\n- CSS custom property schema with raw palette (--palette-0 through --palette-15) and semantic aliases\n- Theme persistence via localStorage with prefers-color-scheme fallback\n- FOUC prevention via inline head script\n- window.__theme API (set, get, list) for command bar integration\n- Theme-aware grain overlay (adjusts opacity/inversion for light vs dark)\n- Smooth theme transitions (80ms) with prefers-reduced-motion support\n\n### Changed\n- Migrated all component colors from hardcoded values to semantic CSS variables\n- Selection styles now use theme-specific selection colors"
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["TASK-001", "TASK-002"],
+      "parallel": true,
+      "estimated_minutes": 20
+    },
+    "2": {
+      "name": "core",
+      "tasks": ["TASK-003"],
+      "parallel": false,
+      "estimated_minutes": 20,
+      "depends_on_levels": [1]
+    },
+    "3": {
+      "name": "integration",
+      "tasks": ["TASK-004"],
+      "parallel": false,
+      "estimated_minutes": 15,
+      "depends_on_levels": [2]
+    },
+    "4": {
+      "name": "quality",
+      "tasks": ["TASK-005"],
+      "parallel": false,
+      "estimated_minutes": 10,
+      "depends_on_levels": [3]
+    }
+  },
+
+  "conflict_matrix": {
+    "description": "Tasks that cannot run in parallel due to shared files",
+    "conflicts": []
+  }
+}

@@ -3,11 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
 import SocialLinks from '../components/SocialLinks.astro';
-import Skills from '../components/Skills.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
 import ProjectShowcase from '../components/ProjectShowcase.astro';
-import { getSiteData } from '../data/site';
+import { getSiteData, getCareerData } from '../data/site';
 
 const site = getSiteData();
+const careerData = getCareerData();
 ---
 
 <Layout title={site.meta.name} description={site.about ?? site.meta.tagline}>
@@ -15,7 +16,7 @@ const site = getSiteData();
     <Hero meta={site.meta} />
     {site.about && <About content={site.about} revealIndex={1} />}
     <SocialLinks links={site.social} revealIndex={2} />
-    {site.skills && site.skills.length > 0 && <Skills skills={site.skills} revealIndex={3} />}
+    {site.skills && site.skills.length > 0 && <KnowledgeGraph skills={site.skills} careerData={careerData} revealIndex={3} />}
     <ProjectShowcase projects={site.projects} githubUser={site.github?.username || 'skitzo2000'} revealIndex={4} />
   </main>
 </Layout>
