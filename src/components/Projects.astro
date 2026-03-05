@@ -10,7 +10,7 @@ interface Props {
 const { projects, revealIndex = 1 } = Astro.props;
 ---
 
-<section class="projects" aria-labelledby="projects-heading" data-reveal data-reveal-index={revealIndex}>
+<section id="projects" class="projects" aria-labelledby="projects-heading" data-reveal data-reveal-index={revealIndex}>
   <h2 id="projects-heading" class="section-heading">## # personal_projects</h2>
   <div class="projects__grid">
     {projects.map((project, i) => (

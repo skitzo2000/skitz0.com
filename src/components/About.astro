@@ -7,7 +7,7 @@ interface Props {
 const { content, revealIndex = 0 } = Astro.props;
 ---
 
-<section class="about" aria-labelledby="about-heading" data-reveal data-reveal-index={revealIndex}>
+<section id="about" class="about" aria-labelledby="about-heading" data-reveal data-reveal-index={revealIndex}>
   <h2 id="about-heading" class="section-heading">## # about_me</h2>
   <div class="about__body">
     <p class="about__text">{content}</p>

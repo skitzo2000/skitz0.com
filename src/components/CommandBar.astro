@@ -1,0 +1,617 @@
+---
+---
+
+<!-- Command bar overlay — hidden by default -->
+<div id="command-bar" class="cmd" role="dialog" aria-label="Command terminal" aria-modal="true" hidden>
+  <div class="cmd__output" id="cmd-output" role="log" aria-live="polite"></div>
+  <div class="cmd__input-row">
+    <label class="cmd__prompt" for="cmd-input">
+      <span class="cmd__prompt-path">visitor@skitz0.com:~</span><span class="cmd__prompt-dollar">$</span>
+    </label>
+    <input id="cmd-input" class="cmd__input" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" />
+  </div>
+</div>
+
+<!-- Mobile floating trigger -->
+<button class="cmd__mobile-btn" aria-label="Open terminal" hidden>
+  <span aria-hidden="true">&gt;_</span>
+</button>
+
+<!-- First-visit hint toast -->
+<div id="cmd-hint" class="cmd__hint" role="status" hidden>
+  Press <kbd>/</kbd> to open terminal
+</div>
+
+<style>
+  .cmd {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-base);
+    opacity: 0.97;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  .cmd__output {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-4) var(--space-6);
+  }
+
+  .cmd__input-row {
+    display: flex;
+    align-items: center;
+    padding: var(--space-3) var(--space-6);
+    border-top: 1px solid var(--border);
+    background: var(--bg-elevated);
+  }
+
+  .cmd__prompt {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .cmd__prompt-path {
+    color: var(--fg-muted);
+  }
+
+  .cmd__prompt-dollar {
+    color: var(--accent);
+    margin: 0 var(--space-2);
+  }
+
+  .cmd__input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--fg-primary);
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    caret-color: var(--accent);
+  }
+
+  .cmd-line {
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: var(--leading-normal);
+  }
+
+  .cmd-line--input {
+    color: var(--fg-muted);
+  }
+
+  .cmd-line--output {
+    color: var(--fg-primary);
+  }
+
+  .cmd-line--error {
+    color: var(--palette-1);
+  }
+
+  .cmd-line--accent {
+    color: var(--accent);
+  }
+
+  /* Mobile trigger — hidden on desktop */
+  .cmd__mobile-btn {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .cmd__mobile-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      bottom: var(--space-6);
+      right: var(--space-6);
+      z-index: 8999;
+      width: 3rem;
+      height: 3rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: border-color var(--duration-fast) ease,
+                  box-shadow var(--duration-fast) ease;
+    }
+
+    .cmd__mobile-btn:hover,
+    .cmd__mobile-btn:focus-visible {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  /* First-visit hint toast */
+  .cmd__hint {
+    position: fixed;
+    bottom: var(--space-8);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    z-index: 8998;
+    animation: hint-fade 4s ease forwards;
+  }
+
+  .cmd__hint kbd {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--accent);
+  }
+
+  @keyframes hint-fade {
+    0%, 70% { opacity: 1; }
+    100% { opacity: 0; pointer-events: none; }
+  }
+
+  /* Filter classes applied to skills/project elements (global scope) */
+  :global(.cmd-highlight) {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  :global(.cmd-dim) {
+    opacity: 0.3;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .cmd {
+      transition: none;
+    }
+
+    .cmd__hint {
+      animation: none;
+    }
+
+    .cmd__mobile-btn {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import commandsData from '../../content/commands.json';
+
+  const bar = document.getElementById('command-bar')!;
+  const output = document.getElementById('cmd-output')!;
+  const input = document.getElementById('cmd-input') as HTMLInputElement;
+  const hint = document.getElementById('cmd-hint')!;
+  const mobileBtn = document.querySelector('.cmd__mobile-btn') as HTMLButtonElement;
+
+  let isOpen = false;
+  let commandHistory: string[] = [];
+  let historyIndex = -1;
+  let outputLineCount = 0;
+  const MAX_OUTPUT_LINES = 100;
+  const MAX_HISTORY = 50;
+  const activeResponses: Record<string, string> = {};
+
+  // Load history from sessionStorage
+  try {
+    const saved = sessionStorage.getItem('skitz0-cmd-history');
+    if (saved) commandHistory = JSON.parse(saved);
+  } catch(e) {}
+
+  // --- Easter Egg Rotation ---
+  function rotateResponses() {
+    for (const [key, data] of Object.entries(commandsData.commands)) {
+      const responses = (data as { responses: string[] }).responses;
+      activeResponses[key] = responses[Math.floor(Math.random() * responses.length)];
+    }
+  }
+  rotateResponses();
+  setInterval(rotateResponses, 180000);
+
+  // --- Command Matching ---
+  function matchCommand(rawInput: string): string | null {
+    const lower = rawInput.toLowerCase().trim();
+    if ((commandsData.commands as Record<string, unknown>)[lower]) return lower;
+    const words = lower.split(/\s+/);
+    for (let len = words.length - 1; len >= 1; len--) {
+      const prefix = words.slice(0, len).join(' ');
+      if ((commandsData.commands as Record<string, unknown>)[prefix]) return prefix;
+    }
+    if (words.length > 1 && (commandsData.commands as Record<string, unknown>)[words[0]]) return words[0];
+    return null;
+  }
+
+  // --- Output Management ---
+  function appendOutput(text: string, className: string = 'cmd-line--output') {
+    const lines = text.split('\n');
+    lines.forEach(function(line) {
+      const div = document.createElement('div');
+      div.className = 'cmd-line ' + className;
+      div.textContent = line;
+      output.appendChild(div);
+      outputLineCount++;
+    });
+    trimOutput();
+    autoScroll();
+  }
+
+  function trimOutput() {
+    while (outputLineCount > MAX_OUTPUT_LINES) {
+      if (output.firstChild) output.removeChild(output.firstChild);
+      outputLineCount--;
+    }
+  }
+
+  function autoScroll() {
+    output.scrollTop = output.scrollHeight;
+  }
+
+  // --- Command Registry ---
+  const registry: Record<string, (args: string) => string | void> = {
+    theme: function(args: string) {
+      const name = args.trim().toLowerCase();
+      if (!name) {
+        const themes = window.__theme.list();
+        const current = window.__theme.get();
+        const list = themes.map(function(t: string) {
+          return (t === current ? '  * ' : '    ') + t;
+        }).join('\n');
+        return 'Available themes:\n' + list;
+      }
+      const success = window.__theme.set(name);
+      if (success) {
+        return 'Theme set to ' + name;
+      } else {
+        const themes = window.__theme.list();
+        return 'Unknown theme: ' + name + '. Available: ' + themes.join(', ');
+      }
+    },
+
+    goto: function(args: string) {
+      const target = args.trim().toLowerCase();
+      const validTargets = ['top', 'about', 'social', 'skills', 'projects'];
+      if (!target || validTargets.indexOf(target) === -1) {
+        return 'Usage: goto <section>\nValid targets: ' + validTargets.join(', ');
+      }
+      if (target === 'top') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const el = document.getElementById(target);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          return 'Section not found: ' + target;
+        }
+      }
+      setTimeout(close, 300);
+      return 'Scrolling to ' + target + '...';
+    },
+
+    filter: function(args: string) {
+      const keyword = args.trim().toLowerCase();
+
+      // Clear existing filter
+      document.querySelectorAll('.cmd-highlight, .cmd-dim').forEach(function(el) {
+        el.classList.remove('cmd-highlight', 'cmd-dim');
+      });
+
+      if (!keyword || keyword === 'clear' || keyword === 'reset') {
+        return 'Filter cleared.';
+      }
+
+      let matchCount = 0;
+      const skills = document.querySelectorAll('.skills__item');
+      const cards = document.querySelectorAll('.card');
+
+      skills.forEach(function(el) {
+        const text = (el.textContent || '').toLowerCase();
+        if (text.includes(keyword)) {
+          el.classList.add('cmd-highlight');
+          matchCount++;
+        } else {
+          el.classList.add('cmd-dim');
+        }
+      });
+
+      cards.forEach(function(el) {
+        const title = el.querySelector('.card__title')?.textContent || '';
+        const desc = el.querySelector('.card__desc')?.textContent || '';
+        const tags = el.querySelector('.card__tags')?.textContent || '';
+        const text = (title + ' ' + desc + ' ' + tags).toLowerCase();
+        if (text.includes(keyword)) {
+          el.classList.add('cmd-highlight');
+          matchCount++;
+        } else {
+          el.classList.add('cmd-dim');
+        }
+      });
+
+      return 'Found ' + matchCount + ' match' + (matchCount !== 1 ? 'es' : '') + ' across skills and projects.';
+    },
+
+    help: function() {
+      return [
+        'Available commands:',
+        '',
+        '  Navigation',
+        '    goto <section>  \u2014 Jump to a section (top, about, social, skills, projects)',
+        '    filter <keyword> \u2014 Highlight matching skills and projects',
+        '',
+        '  Appearance',
+        '    theme <name>    \u2014 Switch terminal theme',
+        '',
+        '  Info',
+        '    help            \u2014 Show this help',
+        '    whoami          \u2014 About skitz0',
+        '    history         \u2014 Show command history',
+        '    clear           \u2014 Clear terminal output',
+        '',
+        '  Also try: ls, cat, pwd, vim, git push, sudo, 42, matrix...',
+      ].join('\n');
+    },
+
+    whoami: function() {
+      return [
+        '+---------------------------------------------------+',
+        '|  skitz0 -- Senior Linux Cloud Engineer            |',
+        '|  Core member & instructor @ HackersGuildPGH       |',
+        '|                                                   |',
+        '|  We like to take things apart                     |',
+        '|  and see how they work.                           |',
+        '|                                                   |',
+        '|  Hobbies include: breaking prod at 4am,           |',
+        '|  3D printing things nobody asked for,             |',
+        '|  and mass: "It works on my machine"               |',
+        '|                                                   |',
+        '|  PGP: Don\'t ask. I lost the key.                  |',
+        '+---------------------------------------------------+',
+      ].join('\n');
+    },
+
+    clear: function() {
+      while (output.firstChild) {
+        output.removeChild(output.firstChild);
+      }
+      outputLineCount = 0;
+    },
+
+    history: function() {
+      if (commandHistory.length === 0) {
+        return 'No command history.';
+      }
+      return commandHistory.map(function(cmd, i) {
+        return '  ' + (i + 1) + '  ' + cmd;
+      }).join('\n');
+    },
+  };
+
+  // --- Tab Completion ---
+  function getAllCommandNames(): string[] {
+    const coreCommands = Object.keys(registry);
+    const easterEggCommands = Object.keys(commandsData.commands);
+    const all: string[] = coreCommands.slice();
+    easterEggCommands.forEach(function(cmd) {
+      if (all.indexOf(cmd) === -1) all.push(cmd);
+    });
+    return all;
+  }
+
+  function tabComplete(partial: string): string[] {
+    const lower = partial.toLowerCase();
+    if (!lower) return [];
+    const allNames = getAllCommandNames();
+    return allNames.filter(function(name) {
+      return name.startsWith(lower);
+    });
+  }
+
+  // --- Command Dispatch ---
+  function executeCommand(raw: string) {
+    const trimmed = raw.trim();
+    if (!trimmed) return;
+
+    // Echo the command
+    appendOutput('visitor@skitz0.com:~$ ' + trimmed, 'cmd-line--input');
+
+    // Add to history
+    commandHistory.push(trimmed);
+    if (commandHistory.length > MAX_HISTORY) commandHistory.shift();
+    historyIndex = -1;
+    try { sessionStorage.setItem('skitz0-cmd-history', JSON.stringify(commandHistory)); } catch(e) {}
+
+    // Parse: first word is command name
+    const parts = trimmed.split(/\s+/);
+    const cmd = parts[0].toLowerCase();
+    const args = parts.slice(1).join(' ');
+
+    // Check registry first
+    if (registry[cmd]) {
+      const result = registry[cmd](args);
+      if (result) appendOutput(result);
+    }
+    // Check easter eggs
+    else {
+      const matched = matchCommand(trimmed);
+      if (matched) {
+        appendOutput(activeResponses[matched]);
+      } else {
+        appendOutput("command not found: " + trimmed + ". Type 'help' for available commands.", 'cmd-line--error');
+      }
+    }
+
+    // Fire custom event
+    document.dispatchEvent(new CustomEvent('terminal:command', {
+      detail: { command: trimmed, output: output.lastChild?.textContent || '' }
+    }));
+  }
+
+  // --- Open / Close / Toggle ---
+  function open() {
+    if (isOpen) return;
+    isOpen = true;
+    bar.hidden = false;
+    input.focus();
+    document.dispatchEvent(new CustomEvent('terminal:open'));
+  }
+
+  function close() {
+    if (!isOpen) return;
+    isOpen = false;
+    bar.hidden = true;
+    input.blur();
+    document.dispatchEvent(new CustomEvent('terminal:close'));
+  }
+
+  function toggle() {
+    isOpen ? close() : open();
+  }
+
+  // --- Input Handling ---
+  input.addEventListener('keydown', function(e: KeyboardEvent) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const value = input.value;
+      input.value = '';
+      executeCommand(value);
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (commandHistory.length === 0) return;
+      if (historyIndex === -1) {
+        historyIndex = commandHistory.length - 1;
+      } else if (historyIndex > 0) {
+        historyIndex--;
+      }
+      input.value = commandHistory[historyIndex];
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex === -1) return;
+      if (historyIndex < commandHistory.length - 1) {
+        historyIndex++;
+        input.value = commandHistory[historyIndex];
+      } else {
+        historyIndex = -1;
+        input.value = '';
+      }
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      close();
+      return;
+    }
+  });
+
+  // --- Focus Trap + Tab Completion ---
+  bar.addEventListener('keydown', function(e: KeyboardEvent) {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+
+      // If focus is not on input, refocus
+      if (document.activeElement !== input) {
+        input.focus();
+        return;
+      }
+
+      // Tab completion
+      const partial = input.value.trim();
+      if (!partial) return;
+
+      const matches = tabComplete(partial);
+      if (matches.length === 1) {
+        input.value = matches[0];
+      } else if (matches.length > 1) {
+        appendOutput(matches.join('  '), 'cmd-line--accent');
+      }
+    }
+  });
+
+  // --- Keyboard Shortcuts (document-level) ---
+  document.addEventListener('keydown', function(e: KeyboardEvent) {
+    // "/" to open (only when not in an input, textarea, or contenteditable)
+    if (e.key === '/' && !isOpen) {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement as HTMLElement)?.isContentEditable) return;
+      e.preventDefault();
+      open();
+      return;
+    }
+
+    // Ctrl+K / Cmd+K to toggle
+    if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      toggle();
+      return;
+    }
+
+    // Escape to close
+    if (e.key === 'Escape' && isOpen) {
+      e.preventDefault();
+      close();
+      return;
+    }
+  });
+
+  // --- Public API: window.__terminal ---
+  window.__terminal = {
+    open: open,
+    close: close,
+    toggle: toggle,
+    run: function(cmd: string) { executeCommand(cmd); },
+    isOpen: function() { return isOpen; },
+  };
+
+  // --- First-Visit Hint ---
+  try {
+    if (!localStorage.getItem('skitz0-hint-seen')) {
+      hint.hidden = false;
+      setTimeout(function() { hint.hidden = true; }, 4000);
+      localStorage.setItem('skitz0-hint-seen', '1');
+    }
+  } catch(e) {}
+
+  // --- Mobile Button ---
+  mobileBtn.addEventListener('click', function() { toggle(); });
+  mobileBtn.hidden = false;
+
+  // --- Type declaration for window.__theme ---
+  declare global {
+    interface Window {
+      __theme: {
+        set: (name: string) => boolean;
+        get: () => string;
+        list: () => string[];
+      };
+      __terminal: {
+        open: () => void;
+        close: () => void;
+        toggle: () => void;
+        run: (cmd: string) => void;
+        isOpen: () => boolean;
+      };
+    }
+  }
+</script>

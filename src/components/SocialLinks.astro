@@ -9,7 +9,7 @@ interface Props {
 const { links, revealIndex = 0 } = Astro.props;
 ---
 
-<section class="social" aria-labelledby="social-heading" data-reveal data-reveal-index={revealIndex}>
+<section id="social" class="social" aria-labelledby="social-heading" data-reveal data-reveal-index={revealIndex}>
   <h2 id="social-heading" class="section-heading">## $ social_links</h2>
   <ul class="social__list">
     {links.map((link, i) => (

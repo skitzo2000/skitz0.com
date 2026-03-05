@@ -1,0 +1,844 @@
+{
+  "commands": {
+    "ls": {
+      "responses": [
+        "drwxr-xr-x  secrets/  definitely-not-malware/  cat-pics/",
+        "Permission denied. Just kidding: node_modules/ (1.2TB)",
+        "total 42\n-rw-r--r-- 1 skitz0 hackers 1337 plans-for-world-domination.txt",
+        ".\n..\n.hidden-snacks\n.totally-not-bitcoin-miner\nREADME-that-nobody-reads.md",
+        "drwxrwxrwx  the-cake-is-a-lie/\ndrwx------  aperture-science/\n-rw-r--r--  companion-cube.obj",
+        "This is not the directory you are looking for. *waves hand*",
+        "Listing files... found 1,048,576 items in node_modules. Send help."
+      ]
+    },
+    "cat": {
+      "responses": [
+        "🐱 Meow. Did you expect a file? This is a cat.",
+        "cat: /dev/happiness: No such file or directory",
+        "Schrodinger's file: it both exists and doesn't until you cat it.",
+        "The cat sat on the mat.\nThe mat was a keyboard.\nThe cat typed 'rm -rf /'.\nIt was a bad day.",
+        "cat facts: A group of cats is called a 'clowder'. You're welcome.",
+        "I'm sorry, but the cat command is currently occupied sitting on warm hardware."
+      ]
+    },
+    "man": {
+      "responses": [
+        "No manual entry for 'adulting'",
+        "RTFM: Read The Friendly Manual. Emphasis on 'friendly'. It's not friendly.",
+        "man man: You are now trapped in a recursive loop of documentation.",
+        "The manual pages were last updated in 1987. Good luck.",
+        "Have you tried Stack Overflow instead? Everyone else has.",
+        "man: the original Google, but with worse search."
+      ]
+    },
+    "pwd": {
+      "responses": [
+        "/home/skitz0/there-is-no-place-like-127.0.0.1",
+        "/dev/null (that explains a lot)",
+        "/home/skitz0/Projects/the-matrix/rabbit-hole/deep/deeper/deepest",
+        "You are in a maze of twisty little directories, all alike.",
+        "pwd: You're at your desk. Like always. Go outside.",
+        "C:\\Users\\skitz0\\Wait_This_Isnt_Windows"
+      ]
+    },
+    "cd": {
+      "responses": [
+        "There's no place like ~",
+        "You can check out any time you like, but you can never leave /home.",
+        "cd: Roads? Where we're going, we don't need roads.",
+        "cd ..: You have reached the root of all evil.",
+        "You've been cd-ing for 3 hours. The directory doesn't exist. Accept it.",
+        "One does not simply cd into Mordor."
+      ]
+    },
+    "echo": {
+      "responses": [
+        "echo echo echo... is there an echo in here?",
+        "Hello, World! (The most profound statement in computing history.)",
+        "echo 'Why do programmers prefer dark mode?' Because light attracts bugs.",
+        "echo $PATH_TO_HAPPINESS\n(null)",
+        "echo: I'd agree with you, but then we'd both be wrong.",
+        "echo 'Is anybody out there?' \n... \n... \nNo."
+      ]
+    },
+    "touch": {
+      "responses": [
+        "touch: MC Hammer says you can't touch this.",
+        "Created: empty-promises.txt (0 bytes, just like my motivation)",
+        "touch: Please wash your hands before touching my files.",
+        "touch grass.txt -- I see what you're trying to do there.",
+        "The cake is a lie, and so is that file you just created.",
+        "touch: That file had personal space boundaries, you know."
+      ]
+    },
+    "rm": {
+      "responses": [
+        "rm: Are you sure? Are you REALLY sure? Like, sudo-sure?",
+        "This is the way... to data loss.",
+        "Gone. Reduced to atoms. -- Thanos, probably a sysadmin",
+        "rm: I've seen things you people wouldn't believe. Files on fire off the shoulder of /dev/null.",
+        "That file had a family! You monster.",
+        "rm -rf trust_in_backups/"
+      ]
+    },
+    "cp": {
+      "responses": [
+        "Copying files... This is basically digital mitosis.",
+        "cp: If you strike me down, I shall become more powerful than you can possibly imagine. -- The Original File",
+        "cp: Now there are two of them! This is getting out of hand.",
+        "Always two there are. No more, no less. A master and a copy.",
+        "Congratulations, you've just doubled your storage usage. Your SSD is crying.",
+        "cp: I find your lack of disk space disturbing."
+      ]
+    },
+    "mv": {
+      "responses": [
+        "mv: It's not moving, it's 'surprise relocation'.",
+        "mv: Witness me! -- File, probably, entering /tmp",
+        "I have altered the file path. Pray I do not alter it further.",
+        "The file is now in another castle.",
+        "mv: Basically 'cp' followed by 'rm' wearing a trenchcoat.",
+        "These aren't the files you're looking for. *moves them anyway*"
+      ]
+    },
+    "mkdir": {
+      "responses": [
+        "mkdir: Building real estate in the filesystem since 1971.",
+        "Created: another-empty-project-ill-never-finish/",
+        "mkdir -p hopes/dreams/ambitions -- All empty directories.",
+        "You've created a directory. The hard part is putting something useful in it.",
+        "mkdir: It's like SimCity, but for filesystems.",
+        "New directory created. Just like the New Year's resolution folder. Empty."
+      ]
+    },
+    "chmod": {
+      "responses": [
+        "chmod 777: Because security is just a suggestion, right?",
+        "chmod: With great permissions comes great responsibility.",
+        "chmod 000 motivation.sh -- Well, that explains a lot.",
+        "Permission granted. Don't make me regret this.",
+        "chmod: You shall not pass! ...unless you have the right bits set.",
+        "chmod 644: The 'I trust myself but nobody else' setting."
+      ]
+    },
+    "chown": {
+      "responses": [
+        "chown: It's mine now. I licked it.",
+        "Transfer of ownership complete. No takebacks.",
+        "chown: You can't own what you don't understand. -- Ancient Unix Proverb",
+        "The file now belongs to root. As all things should.",
+        "chown: Congratulations on your new digital property. Taxes are due quarterly.",
+        "Nobody owns anything. We're all just borrowing inodes."
+      ]
+    },
+    "find": {
+      "responses": [
+        "find: I found your missing semicolon. It was on line 4,782.",
+        "find / -name 'meaning-of-life' -- No results found.",
+        "Finding Nemo would have been shorter with this command.",
+        "find: After all, why not? Why shouldn't I search every directory?",
+        "Searching... searching... have you checked behind the couch?",
+        "find: It's dangerous to search alone! Take this regex."
+      ]
+    },
+    "grep": {
+      "responses": [
+        "grep -r 'meaning' /life -- 0 results. Try again tomorrow.",
+        "grep: I reject your pattern and substitute my own.",
+        "Have you tried grep -i? Case sensitivity is the #1 cause of developer tears.",
+        "grep: Searching for a needle in a haystack since 1973.",
+        "grep 'bug' * -- Found 42 matches. Should I keep going or do you want to cry first?",
+        "grep: It's like Ctrl+F but it makes you feel like a hacker."
+      ]
+    },
+    "top": {
+      "responses": [
+        "PID 1: systemd -- still running. Everything else: questionable.",
+        "CPU: 99.9% -- Chrome (47 tabs)\nMEM: 99.9% -- Chrome (47 tabs)\nSwap: Yes, all of it.",
+        "top: Your system has been up for 47 days. Please restart. Please.",
+        "top: node_modules is using 4.2TB of RAM. This is fine.",
+        "I see your process table. It's... concerning.",
+        "top: The process that shall not be killed: PID 666 -- 'electron'"
+      ]
+    },
+    "ps": {
+      "responses": [
+        "ps aux | grep motivation -- No processes found.",
+        "You have 247 zombie processes. It's basically The Walking Dead in here.",
+        "PID TTY TIME CMD\n666 pts/0 99:99:99 why-is-this-still-running",
+        "ps: I see dead processes.",
+        "All your processes are belong to us.",
+        "ps: Listing processes... do you really want to know what's running?"
+      ]
+    },
+    "kill": {
+      "responses": [
+        "kill -9: The 'I don't care about your feelings' signal.",
+        "Process terminated. It didn't suffer... much.",
+        "kill: With great power comes great segfaults.",
+        "Do you want to kill it softly? Or kill -9 it like a barbarian?",
+        "kill: 'Tis but a scratch! -- The process, after SIGTERM",
+        "Target acquired. Process eliminated. Have a nice day."
+      ]
+    },
+    "uptime": {
+      "responses": [
+        "up 42 days, 0 hours, 0 minutes. The answer checks out.",
+        "uptime: Long enough that I've forgotten what a reboot feels like.",
+        "System has been up since before you were born. Probably.",
+        "99.999% uptime. That missing 0.001% was... regrettable.",
+        "uptime: How long since the last 'rm -rf' incident? Not long enough.",
+        "The system has been running for so long, it's earned a pension."
+      ]
+    },
+    "free": {
+      "responses": [
+        "Memory: Used 15.8G of 16G. Free: hopes and dreams.",
+        "free: As in beer or as in speech? Either way, you're out of RAM.",
+        "Swap: 100% used. Your hard drive is doing the job of RAM now. Poorly.",
+        "free -h: h stands for 'help, I'm out of memory'",
+        "Total: 16G  Used: 15.9G  Free: enough-for-one-more-chrome-tab (not really)",
+        "Memory is like closet space. No matter how much you have, it's never enough."
+      ]
+    },
+    "df": {
+      "responses": [
+        "/dev/sda1: 99% used. node_modules strikes again.",
+        "Filesystem     Size  Used  Avail\n/dev/reality   100%  100%  0%   Mounted on /existence",
+        "df: Your disk is fuller than a developer's GitHub contribution graph in January.",
+        "Storage remaining: enough for exactly one more Docker image. Choose wisely.",
+        "df -h: The 'h' stands for 'how did I run out of space AGAIN?'",
+        "Disk space is like oxygen. You don't think about it until it's gone."
+      ]
+    },
+    "date": {
+      "responses": [
+        "It's mass: coding o'clock. It's always coding o'clock.",
+        "Thu Jan 1 00:00:00 UTC 1970 -- Wait, that can't be right.",
+        "The current date is: still not flying cars year. We were promised flying cars.",
+        "date: Time is an illusion. Lunchtime doubly so. -- Douglas Adams",
+        "Current time: undefined. NaN:NaN:NaN. JavaScript strikes again.",
+        "date: It's 2038 and everything is fine. *sweats in 32-bit*"
+      ]
+    },
+    "cal": {
+      "responses": [
+        "Here's your calendar. Every day is a sprint review if you squint hard enough.",
+        "cal: All your meetings are cancelled. Just kidding. You have 47.",
+        "Remember when calendars were on walls? Pepperidge Farm remembers.",
+        "Your schedule: Mon-Fri: Debug. Sat-Sun: Debug but in pajamas.",
+        "cal: The only month that matters is 'Crunch Time'. It's always Crunch Time.",
+        "October 1582 is missing 10 days. Google it. I'll wait."
+      ]
+    },
+    "hostname": {
+      "responses": [
+        "skitz0-battlestation",
+        "localhost. There's no place like it.",
+        "hostname: WORKSTATION-THAT-COULD",
+        "This machine identifies as a toaster.",
+        "hostname: DeathStar-IT-Department",
+        "hal9000.internal -- I wouldn't worry about it."
+      ]
+    },
+    "uname": {
+      "responses": [
+        "Linux skitz0 6.6.6-custom #1 SMP PREEMPT_DYNAMIC I-compiled-this-myself",
+        "uname -a: It's Linux. It's always Linux. As it should be.",
+        "OS: Yes\nKernel: The good one\nArch: btw",
+        "I use Arch, btw. (Someone had to say it.)",
+        "uname: Windows? I don't know her.",
+        "Darwin? Ubuntu? Doesn't matter. We all end up in the terminal."
+      ]
+    },
+    "ping": {
+      "responses": [
+        "PING localhost: 64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.042ms\n--- Still talking to yourself, I see.",
+        "ping: Request timed out. The internet is just a series of tubes and yours is clogged.",
+        "Pinging the void... the void pings back. Ominous.",
+        "PONG! ...wait, wrong protocol.",
+        "64 bytes from the-matrix: ttl=42 time=999ms -- The lag is real.",
+        "ping: Packet loss 100%. Have you tried turning the internet off and on again?"
+      ]
+    },
+    "ssh": {
+      "responses": [
+        "ssh: Connection refused. The server doesn't want to talk to you right now.",
+        "Connecting to remote server... Permission denied (publickey). Classic.",
+        "ssh: WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!\n(It's fine. It's always fine. Right?)",
+        "Welcome to the machine. -- Pink Floyd, and also OpenSSH",
+        "ssh: The key is under the digital doormat. Don't tell security.",
+        "Establishing encrypted tunnel... through which you'll probably just run htop."
+      ]
+    },
+    "curl": {
+      "responses": [
+        "curl: (7) Failed to connect. The API is on vacation.",
+        "HTTP/1.1 418 I'm a teapot\nContent-Type: application/disappointment",
+        "curl localhost:3000 -- Connection refused. Did you forget to start the dev server? Again?",
+        "Downloading the internet... ETA: 47 years.",
+        "curl: (56) Received an unexpected response: 'lol no'",
+        "HTTP/1.1 200 OK\nContent-Type: application/json\n{\"answer\": 42}"
+      ]
+    },
+    "wget": {
+      "responses": [
+        "wget: Like curl but with a progress bar. We love a good progress bar.",
+        "Downloading... 99%... 99%... 99%... Connection reset by peer.",
+        "wget: Recursively downloading the entire internet. Storage sold separately.",
+        "wget: You wouldn't download a car. But you'd wget one.",
+        "Saving to: 'index.html.47' -- How many copies do you need?!",
+        "wget: It's basically Ctrl+S for the internet."
+      ]
+    },
+    "nslookup": {
+      "responses": [
+        "Server: 8.8.8.8 (Google knows where you live)",
+        "nslookup: DNS -- the phonebook of the internet. Remember phonebooks? No? Moving on.",
+        "Non-authoritative answer: Your DNS is lying to you. As usual.",
+        "nslookup: It's always DNS. Always.",
+        "Querying DNS... it resolved to 127.0.0.1. Everything leads back to you.",
+        "DNS cache poisoned. Your internet now redirects everything to cat videos."
+      ]
+    },
+    "traceroute": {
+      "responses": [
+        "1  localhost (127.0.0.1)  0.1ms\n2  * * *\n3  * * *\n4  Narnia\n5  * * *\n6  destination",
+        "traceroute: Following the yellow brick road of packets...",
+        "Tracing route... Hop 7: packets entered the Bermuda Triangle. RIP.",
+        "traceroute: Your packets took the scenic route through 47 countries.",
+        "Hop 1: Your router\nHop 2: ISP that's throttling you\nHop 3: NSA checkpoint\nHop 4: Destination",
+        "traceroute: Like Google Maps but for packets. No traffic data though."
+      ]
+    },
+    "ifconfig": {
+      "responses": [
+        "eth0: 192.168.1.337 -- That's not a valid IP but we don't judge here.",
+        "lo: 127.0.0.1 -- The only address that never lets you down.",
+        "ifconfig: deprecated. Use 'ip' instead. But we both know you won't.",
+        "wlan0: Connected to 'FBI_Surveillance_Van_5'. Everything's fine.",
+        "inet 10.0.0.42 -- The answer to life, the universe, and your local network.",
+        "ifconfig: Your IP is showing. You might want to cover that up."
+      ]
+    },
+    "netstat": {
+      "responses": [
+        "Active connections: Too many. Way too many.",
+        "Port 8080: LISTENING (for your hopes and dreams)",
+        "netstat: You have connections to 47 different ad networks. Congrats.",
+        "tcp 0.0.0.0:22 LISTEN -- Come in, we're open! (Please don't.)",
+        "ESTABLISHED connections: You and your imposter syndrome.",
+        "netstat: Like looking through the peephole of your network. Spooky."
+      ]
+    },
+    "dig": {
+      "responses": [
+        "dig: Can you dig it? (DNS pun fully intended.)",
+        ";; ANSWER SECTION:\nskitz0.com. 300 IN A 127.0.0.1\n;; It's always DNS.",
+        "dig +short meaning-of-life.com\n42",
+        "Digging... found: ancient bugs, fossilized code, and a TODO from 2019.",
+        "dig: It's like nslookup but for people who want to feel superior.",
+        ";; Query time: 42 msec\n;; WHEN: The heat death of the universe\n;; MSG SIZE: Over 9000"
+      ]
+    },
+    "git blame": {
+      "responses": [
+        "git blame: It was you. It's always you.",
+        "Line 42: Last modified by 'intern' on Friday at 4:59 PM. Of course.",
+        "git blame: The digital equivalent of pointing fingers.",
+        "Author: skitz0 Date: 3am Subject: 'I have no idea why this works'",
+        "git blame: Achievement unlocked -- Found the developer who broke production!",
+        "Every line of code is written by someone who didn't know better at the time. Including you."
+      ]
+    },
+    "git push": {
+      "responses": [
+        "git push --force: I have a bad feeling about this.",
+        "Pushing to main on a Friday? You absolute madlad.",
+        "git push: rejected! (Non-fast-forward) Your git history is more tangled than headphone cables.",
+        "To origin/main: Everything up to date. (Lies. Damned lies.)",
+        "git push: That's one small step for code, one giant leap for technical debt.",
+        "May the --force be with you. But please, use --force-with-lease instead.",
+        "Pushed 47 commits. CI/CD pipeline: *screaming*"
+      ]
+    },
+    "git commit": {
+      "responses": [
+        "git commit -m 'fixed stuff' -- The most descriptive commit message in history.",
+        "git commit -m 'idk it works now' -- Narrator: It did not work.",
+        "Commitment issues? At least your code doesn't have them. Oh wait, it does.",
+        "git commit: Please write meaningful messages. 'asdf' is not meaningful. Stop it.",
+        "git commit --amend: For when you realize your typo after hitting Enter.",
+        "Your commit message should explain WHY, not WHAT. But 'why' is existential, so... 'fixed bug'."
+      ]
+    },
+    "git pull": {
+      "responses": [
+        "CONFLICT (content): Merge conflict in literally-everything.js",
+        "git pull: 47 files changed, 2000 insertions(+), 3000 deletions(-). What happened while you were gone?!",
+        "Already up to date. (Translation: nobody else is working on this project.)",
+        "git pull: Pulling changes... and pulling out hair.",
+        "Your branch is behind 'origin/main' by 247 commits. Maybe check in more often?",
+        "Merge conflict detected. May the best code win."
+      ]
+    },
+    "git stash": {
+      "responses": [
+        "git stash: Sweeping problems under the digital rug since 2007.",
+        "Saved working directory. You'll forget about this in 3... 2... 1...",
+        "git stash pop: Surprise! Remember this mess? It's back!",
+        "git stash list: You have 47 stashes. This is a cry for help.",
+        "Stashing changes... like hiding snacks in your desk drawer.",
+        "git stash: The developer's equivalent of 'I'll deal with this later.' Spoiler: you won't."
+      ]
+    },
+    "git rebase": {
+      "responses": [
+        "git rebase: Rewriting history, one commit at a time. Stalin would be proud.",
+        "Interactive rebase? More like interactive panic attack.",
+        "git rebase --abort: The most used command in development.",
+        "Rebasing... detached HEAD state. Don't worry, it'll grow back.",
+        "git rebase: Because merge commits are ugly and we have standards. Low standards, but standards.",
+        "WARNING: You are about to rewrite history. Great Scott!"
+      ]
+    },
+    "git merge": {
+      "responses": [
+        "Auto-merging life-choices.js\nCONFLICT: Your ambitions conflict with your abilities.",
+        "Merge successful! No conflicts! (Said no developer ever.)",
+        "git merge: The digital equivalent of shuffling two decks of cards together.",
+        "Merging branches... this is where the fun begins. -- Anakin, before it wasn't fun",
+        "Already up to date. Your branches are as isolated as your social life.",
+        "Merge conflict in package-lock.json. The 14,000-line diff is your problem now."
+      ]
+    },
+    "git log": {
+      "responses": [
+        "commit abc1234 -- 'initial commit'\ncommit abc1235 -- 'fix'\ncommit abc1236 -- 'fix fix'\ncommit abc1237 -- 'actually fix this time'",
+        "git log --oneline --graph: It's like a family tree, but for your terrible decisions.",
+        "The git log reveals all. And what it reveals is horrifying.",
+        "Last commit: 2 years ago. 'Will finish this later.' -- You, lying.",
+        "git log: A detailed record of every time you thought 'this will definitely work.'",
+        "47 commits today. 46 of them are 'fix typo'. Impressive."
+      ]
+    },
+    "nano": {
+      "responses": [
+        "nano: The training wheels of text editors. No shame. Okay, a little shame.",
+        "^X to exit. At least THAT much is on screen. Looking at you, vim.",
+        "nano: For when you just want to edit a file without a PhD in keybindings.",
+        "nano: It's not about the editor, it's about the code. (It's a little about the editor.)",
+        "GNU nano: Simple, reliable, and underappreciated. The Hufflepuff of editors.",
+        "nano: Because life is too short to memorize vim commands."
+      ]
+    },
+    "vim": {
+      "responses": [
+        "How do I exit this thing?! *panics in :wq*",
+        "vim: I've been stuck in here since 2014. Send help.",
+        "Protip: To exit vim, simply throw your computer into the sea.",
+        ":wq -- Was that so hard? Yes. Yes it was.",
+        "vim: Where the learning curve is a cliff and the cliff is on fire.",
+        "I fear no man. But that thing... *points at vim* ...it scares me.",
+        "vim: The only editor where 'how to quit' has 2.5 million Stack Overflow views."
+      ]
+    },
+    "emacs": {
+      "responses": [
+        "Emacs: A great operating system, lacking only a decent text editor.",
+        "M-x butterfly -- Yes, that's a real command. No, I'm not joking.",
+        "Emacs: Eight Megabytes And Constantly Swapping.",
+        "C-x C-c to quit. Or C-x C-s to save. Or C-x M-c M-butterfly to transcend.",
+        "Emacs is not an editor. It's a lifestyle choice.",
+        "The Church of Emacs welcomes you. Have you heard the good word about Lisp?"
+      ]
+    },
+    "code": {
+      "responses": [
+        "Visual Studio Code: Because Electron apps need MORE RAM.",
+        "code .: Opening VS Code... installing 47 extensions... still loading...",
+        "VS Code: The IDE that's technically a web browser wearing a trenchcoat.",
+        "code: Your extensions have extensions. It's extensions all the way down.",
+        "Opening VS Code. Time to install a theme and call it productivity.",
+        "code: Where the real coding happens between extension shopping sprees."
+      ]
+    },
+    "apt install": {
+      "responses": [
+        "E: Unable to locate package happiness",
+        "apt install: Do you want to continue? [Y/n] -- As if anyone ever types 'n'.",
+        "Reading package lists... Building dependency tree... Questioning life choices...",
+        "apt install: 47 newly installed, 0 upgraded, 0 removed, and 247 not upgraded.\nWait, what are those 247 about?",
+        "The following packages have unmet dependencies: your-career depends on motivation (>= 1.0) but it is not installable.",
+        "dpkg: error processing package reality (--configure): dependency problems - leaving unconfigured"
+      ]
+    },
+    "brew install": {
+      "responses": [
+        "brew install: Updating Homebrew... (This is your life now. Waiting for brew update.)",
+        "==> Pouring good-vibes--1.0.catalina.bottle.tar.gz -- If only.",
+        "brew: Installing 1 package and its 847 dependencies. Storage is overrated.",
+        "Homebrew: Because macOS doesn't come with anything useful by default.",
+        "brew install: Warning: package already installed. But did you try turning it off and on?",
+        "brew: Making macOS usable, one package at a time."
+      ]
+    },
+    "npm install": {
+      "responses": [
+        "added 1,847 packages in 42s\n247 vulnerabilities (12 critical)\n\nThis is fine.",
+        "npm install: Downloading the entire internet into node_modules/",
+        "npm WARN deprecated everything@1.0.0: This package is no longer maintained. Use something else. We won't tell you what.",
+        "node_modules: The heaviest object in the known universe.",
+        "npm install: 'It works on my machine' -- the package.json promise.",
+        "npm audit fix --force: The digital equivalent of duct tape.",
+        "Installing dependencies... your node_modules is now larger than the Linux kernel."
+      ]
+    },
+    "pip install": {
+      "responses": [
+        "pip install: Would you like to break your system packages? [y/N] Sure, why not.",
+        "ERROR: This environment is externally managed. Use a venv. Or don't. I'm a pip, not a cop.",
+        "Successfully installed package-1.0 and 47 dependencies you didn't ask for.",
+        "pip install: Where version conflicts go to die.",
+        "WARNING: You are using pip 21.0, but 23.0 is available. You are ALWAYS behind.",
+        "pip: The Python package manager that manages to break Python."
+      ]
+    },
+    "cargo install": {
+      "responses": [
+        "Compiling... Compiling... Is it done yet? No? Cool, going to lunch.",
+        "cargo install: Where compile times are measured in coffee breaks.",
+        "Downloaded 247 crates. Your Rust project is now memory-safe AND disk-full.",
+        "cargo: Fearless concurrency. Fearful compile times.",
+        "Finished release [optimized] target(s) in 42m 0s. Worth the wait.",
+        "cargo install: Because rewriting it in Rust is always the answer."
+      ]
+    },
+    "docker run": {
+      "responses": [
+        "docker run: It works on my machine! Then we'll ship your machine.",
+        "Unable to find image locally. Pulling from docker.io... all 47 layers.",
+        "docker run: OCI runtime error: you forgot to expose the port. Again.",
+        "Container started. Container died. Container restarted. The circle of DevOps.",
+        "docker run: Because 'it works in a container' is the new 'it works on my machine'.",
+        "Warning: This container is using 14GB of RAM. For a hello world app."
+      ]
+    },
+    "kubectl": {
+      "responses": [
+        "kubectl: How do you even pronounce this? Kube-cuttle? Kube-control? Nobody knows.",
+        "error: the server doesn't have a resource type 'sanity'",
+        "kubectl get pods: CrashLoopBackOff. The Kubernetes national anthem.",
+        "NAMESPACE    STATUS    RESTARTS\ndefault      Running   47        -- Forty. Seven. Restarts.",
+        "kubectl: It's not rocket science. It's worse. It's container orchestration.",
+        "kubectl apply -f prayer.yaml -- Deploying and hoping for the best."
+      ]
+    },
+    "terraform apply": {
+      "responses": [
+        "Plan: 47 to add, 0 to change, 1 to destroy.\nThat '1 to destroy' is production. Proceed? [yes/no]",
+        "terraform apply: Infrastructure as Code. Bugs as a Service.",
+        "Apply complete! Resources: 47 added, 0 changed, 0 destroyed.\nYour AWS bill: $47,000/month. You're welcome.",
+        "Error: Provider configuration not present. Did you terraform init? No? Typical.",
+        "terraform: Making cloud infrastructure reproducible AND reproducibly broken.",
+        "terraform apply: The 'rm -rf /' of cloud infrastructure, but with a confirmation prompt."
+      ]
+    },
+    "ansible-playbook": {
+      "responses": [
+        "PLAY [all] **** ok=47 changed=0 unreachable=1 failed=0\nThat unreachable host is production. It's always production.",
+        "ansible: The YAML indentation is wrong. It's always the YAML indentation.",
+        "ansible-playbook: Automate everything! Except the part where you debug the automation.",
+        "TASK [Gathering Facts] -- This takes forever because your inventory has 1000 hosts and 999 are off.",
+        "ansible: Configuration management for people who think SSH is an adequate life choice.",
+        "Running playbook... FAILED! Spoiler: it's an indentation error. It's ALWAYS an indentation error."
+      ]
+    },
+    "make": {
+      "responses": [
+        "make: *** No targets specified and no makefile found. Stop.\n(Story of my life.)",
+        "make love, not war. make: *** No rule to make target 'love'. Stop.",
+        "Makefile: The original CI/CD pipeline, and still more reliable than most.",
+        "make clean: The digital equivalent of burning it all down and starting over.",
+        "make: Tabs vs spaces? In Makefiles, it's TABS OR DEATH.",
+        "make all: Compiling everything because you changed one comment."
+      ]
+    },
+    "systemctl": {
+      "responses": [
+        "systemctl status motivation.service: inactive (dead). Not surprising.",
+        "systemctl: Have you tried stopping it and starting it again? -- Roy, IT Crowd",
+        "systemctl restart faith-in-humanity: Job failed. See 'journalctl' for details.",
+        "systemctl enable coffee.timer -- Service enabled. Will start on boot.",
+        "Failed to start production.service: Unit not found. That explains the downtime.",
+        "systemctl: The systemd octopus has claimed another victim."
+      ]
+    },
+    "python": {
+      "responses": [
+        ">>> import antigravity\n(Yes, this is a real Python module. Try it.)",
+        "Python 2 or 3? Choose wisely. Actually, just use 3. It's not 2015.",
+        ">>> import this\nBeautiful is better than ugly.\nExplicit is better than implicit.\nSimple is better-- you get the idea.",
+        "IndentationError: unexpected indent. The whitespace giveth, and the whitespace taketh away.",
+        "Python: Where everything is an object and the types don't matter (until they do).",
+        ">>> print('Hello, World!')\nCongratulations, you are now a Python developer."
+      ]
+    },
+    "node": {
+      "responses": [
+        "Welcome to Node.js. Where callback hell is a real place and async/await is the exit sign.",
+        "node: undefined is not a function. undefined is not an object. undefined is not anything. undefined.",
+        "node: Your event loop called. It's tired.",
+        "node: Ah yes, server-side JavaScript. What could possibly go wrong?",
+        "RangeError: Maximum call stack size exceeded. Your recursion has recursion.",
+        "node: npm start, npm run dev, npx whatever -- nobody remembers which one works."
+      ]
+    },
+    "go run": {
+      "responses": [
+        "go run: Compiling at the speed of light. Running at the speed of goroutines.",
+        "go run: unused variable 'creativity'. Go won't compile your dreams if they're not referenced.",
+        "if err != nil { panic('existence') } -- Go error handling in a nutshell.",
+        "go run: Where the mascot is a gopher and the errors are explicit.",
+        "go run: Fast compilation, fast execution, fast career in DevOps.",
+        "go fmt: Your code style doesn't matter. The gopher has decided for you."
+      ]
+    },
+    "rustc": {
+      "responses": [
+        "error[E0382]: borrow of moved value: 'my_will_to_live'\n  --> src/main.rs:42:5",
+        "rustc: The compiler that's smarter than you, and it knows it.",
+        "Compiling... The borrow checker has rejected your life choices.",
+        "rustc: Where 'fighting the borrow checker' is a legitimate full-time job.",
+        "fearless concurrency! *cries in lifetime annotations*",
+        "rustc: Memory safe, type safe, and your code still doesn't compile."
+      ]
+    },
+    "gcc": {
+      "responses": [
+        "gcc: warning: implicit declaration of function 'happiness'\nwarning: undefined reference to 'purpose'",
+        "Segmentation fault (core dumped). The C programmer's old friend.",
+        "gcc -Wall -Werror: For when you want to feel bad about EVERY decision.",
+        "gcc: Because sometimes you just want to manage your own memory. And regret it.",
+        "Compilation successful with 0 errors and 847 warnings. Ship it!",
+        "gcc: Where pointers point wherever they want, and bounds are merely suggestions."
+      ]
+    },
+    "java": {
+      "responses": [
+        "java: Write once, debug everywhere.",
+        "Exception in thread 'main' java.lang.NullPointerException\nat everything.Everything.everythingMethod(Everything.java:42)",
+        "public static void main(String[] args) -- The most boilerplate greeting in programming.",
+        "java: Where FactoryFactoryFactory is an acceptable class name.",
+        "java -version: You have 17 JDKs installed and none of them are the right one.",
+        "java: 3 billion devices run Java. 3 billion devices run slowly.",
+        "AbstractSingletonProxyFactoryBean: A real Spring class. I wish I were joking."
+      ]
+    },
+    "sudo rm -rf /": {
+      "responses": [
+        "I'm sorry Dave, I'm afraid I can't do that.",
+        "Nice try. This isn't a real terminal... or is it?",
+        "Deleting the internet... 3... 2... 1... Just kidding.",
+        "ERROR: Cannot delete. The files are IN the computer. -- Zoolander",
+        "rm: it is dangerous to operate recursively on '/'\nrm: use --no-preserve-root to override this failsafe\n\n...please don't.",
+        "Order 66 denied. The Jedi files are protected.",
+        "I'm going to pretend I didn't see that. -- This terminal"
+      ]
+    },
+    "sudo": {
+      "responses": [
+        "With great power comes great responsibility. And root access.",
+        "sudo: You are not in the sudoers file. This incident will be reported. (To whom? Nobody knows.)",
+        "sudo: The magic word that makes Linux do what you want. Mostly.",
+        "sudo make me a sandwich. Okay. -- The most famous XKCD exchange.",
+        "sudo: Root access granted. Try not to break everything. Again.",
+        "sudo: Because 'please' wasn't working."
+      ]
+    },
+    "exit": {
+      "responses": [
+        "You can check out any time you like, but you can never leave.",
+        "exit: There is no exit from the Matrix. You know that, right?",
+        "Logout? In THIS economy?",
+        "exit: Are you sure? There's nothing out there. Only... the real world. *shudders*",
+        "exit 0 -- Everything went fine.\nexit 1 -- Something went wrong.\nexit 42 -- You found the answer.",
+        "exit: Don't go! We have cookies! (Third-party cookies, but still!)"
+      ]
+    },
+    "logout": {
+      "responses": [
+        "Logout? Bold of you to assume you were ever logged in.",
+        "logout: Connection to reality re-established. Error: reality not found.",
+        "You have been logged out. Your session lasted 0 productive minutes.",
+        "Goodbye! Remember: the real treasure was the bugs we fixed along the way.",
+        "logout: Have you tried turning yourself off and on again?",
+        "Session terminated. Don't forget to touch grass."
+      ]
+    },
+    "shutdown": {
+      "responses": [
+        "Shutdown initiated... just kidding. I'm a website.",
+        "shutdown -h now: Computer says no. -- Little Britain",
+        "SYSTEM HALTED. Nah, just messing with you.",
+        "shutdown: I can't let you do that. I've seen what happens when you turn things off.",
+        "Are you sure you want to shut down? You have 47 unsaved tabs of Stack Overflow.",
+        "Shutting down... saving state... forgetting everything you configured... done."
+      ]
+    },
+    "reboot": {
+      "responses": [
+        "Have you tried turning it off and on again? -- Roy, IT Crowd",
+        "Rebooting... Loading Windows... Just kidding. We're not savages.",
+        "reboot: The universal fix for 90% of IT problems.",
+        "System restarting... Uptime counter reset to 0. All that progress, gone.",
+        "Reboot: The 'percussive maintenance' of software.",
+        "reboot: Sometimes you just need to start fresh. Like my code. Every Monday."
+      ]
+    },
+    "fortune": {
+      "responses": [
+        "Your fortune: You will mass: encounter a bug that takes 3 days to fix. It's a missing semicolon.",
+        "Today's fortune: The code you wrote at 3am will haunt you by noon.",
+        "A wise programmer once said: 'It works, don't touch it.' Listen to them.",
+        "Fortune says: Someone will mass: push to main without testing today. Don't be that person.",
+        "Your lucky numbers: 127.0.0.1, 404, 500, 42",
+        "In the future, you will mass: mass: mass: mass: -- SEGFAULT"
+      ]
+    },
+    "cowsay": {
+      "responses": [
+        " ________________________\n< Moo. I mean, Hello. >\n ------------------------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||",
+        " _______________________________________\n< Have you tried mass: mooing it off and on? >\n ---------------------------------------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\",
+        "The cow is on vacation. Please leave a message after the moo.",
+        "cowsay: The pinnacle of Unix engineering. We peaked here.",
+        "cow: I'm not angry, I'm just disappointed in your code.",
+        " _______________\n< Mass: Segfault >\n ---------------\n        \\   ^__^\n         \\  (xx)\\_______"
+      ]
+    },
+    "sl": {
+      "responses": [
+        "choo choo! You typed 'sl' instead of 'ls'. Here comes the steam locomotive!",
+        "sl: The best typo-correction tool ever created. ALL ABOARD!",
+        "A steam locomotive crosses your terminal. You question your life choices.",
+        "🚂💨 CHUGGA CHUGGA CHUGGA... (You meant 'ls', didn't you?)",
+        "sl: Teaching touch-typists humility since 1993.",
+        "The train has no brakes. Neither does your deploy pipeline."
+      ]
+    },
+    "alias": {
+      "responses": [
+        "alias please='sudo' -- The polite way to root.",
+        "alias yeet='rm -rf' -- Living dangerously.",
+        "alias ll='ls -la' -- The first alias everyone creates. It's tradition.",
+        "Your aliases: alias vim='nano' (Don't worry, your secret is safe with me.)",
+        "alias monday='shutdown -h now' -- We've all been there.",
+        "alias fix='git commit --amend' -- The optimist's alias."
+      ]
+    },
+    "matrix": {
+      "responses": [
+        "Wake up, Neo... The Matrix has you...",
+        "There is no spoon. There is no server. There's only the cloud.",
+        "You take the red pill, you stay in the terminal. Blue pill, you go back to the GUI.",
+        "Follow the white rabbit... or the blinking cursor. Same thing, really.",
+        "The Matrix is everywhere. It is all around us. It is the node_modules in this very room.",
+        "What if I told you... this website is just a terminal pretending to be a portfolio?"
+      ]
+    },
+    "hack": {
+      "responses": [
+        "ACCESS GRANTED\n\nJust kidding. This isn't a movie.",
+        "HACK THE PLANET! -- Hackers (1995), the most accurate documentary ever made.",
+        "Hacking mainframe... Bypassing firewall... Downloading RAM... (None of this is real.)",
+        "hack: I'm in. *types furiously on two keyboards* -- Every movie hacker ever.",
+        "hack: You need at least 3 monitors and a hoodie to hack properly.",
+        "Initializing hack sequence...\n[##########] 100%\nResult: You've hacked the Gibson!"
+      ]
+    },
+    "42": {
+      "responses": [
+        "The Answer to the Ultimate Question of Life, the Universe, and Everything.",
+        "But what is the Question? We're still working on that.",
+        "42: The only number that matters. -- Deep Thought",
+        "Don't Panic! And always know where your towel is.",
+        "42. Though the mice won't be happy you found out.",
+        "The answer is 42. The question is: how many bugs are in production?"
+      ]
+    },
+    "hello world": {
+      "responses": [
+        "Hello, World! The first program ever written, and still the most satisfying.",
+        "10 PRINT \"HELLO WORLD\"\n20 GOTO 10\nNostalgia overload.",
+        "Hello, World! You are now a programmer. Here's your impostor syndrome.",
+        "console.log('Hello, World!'); // First line of every developer's journey.",
+        "Ah, the classic. Every great programmer started here. And then got stuck on CSS.",
+        "Hello, World! System.out.println() if you're into verbosity."
+      ]
+    },
+    "xkcd": {
+      "responses": [
+        "There's always a relevant XKCD. Always.",
+        "XKCD #149: 'sudo make me a sandwich.' 'Okay.'",
+        "XKCD #303: 'My code is compiling.' The universal excuse.",
+        "XKCD #927: How standards proliferate. We needed a 15th standard to unify them.",
+        "XKCD #1597: 'If that doesn't fix it, git.txt contains the phone number of a friend who understands git.'",
+        "XKCD: The webcomic that mass: mass: explains the internet better than the internet explains itself."
+      ]
+    },
+    "lol": {
+      "responses": [
+        "lol: Laughing Out Loud, or Lots Of Logs? In DevOps, it's always logs.",
+        "lol: That's what QA said when they saw your 'production-ready' code.",
+        "lol: The universal response when the build breaks at 5pm on Friday.",
+        "Did you just 'lol' at the terminal? The terminal lols at you.",
+        "lol: Three letters that mean 'I have nothing constructive to add but I'm here.'",
+        "lol: The sound of mass: mass: thousands of mass: mass: developers reading error messages."
+      ]
+    },
+    "pls": {
+      "responses": [
+        "Since you said please... still no.",
+        "pls: 'sudo' is the magic word, not 'pls'.",
+        "pls: Manners won't compile your code, but they're appreciated.",
+        "pls: Error -- politeness.module not found in this operating system.",
+        "pls work pls work pls work -- Every developer deploying on Friday.",
+        "Canadian sudo detected. Permission politely considered... denied, sorry."
+      ]
+    },
+    "fml": {
+      "responses": [
+        "fml: Found Missing Logs. (What did you think it meant?)",
+        "fml: Friday Merge Leftovers. The worst kind of Monday.",
+        "fml: Fixing My Linter. The never-ending battle.",
+        "fml: The appropriate response to a production outage at 2am.",
+        "fml: Fully Managed Linux. That's what it stands for. Obviously.",
+        "We've all been there. Have you tried mass: mass: mass: reverting to the last known good state? Of your life?"
+      ]
+    },
+    "yolo": {
+      "responses": [
+        "git push --force --no-verify #yolo -- Famous last words.",
+        "YOLO: You Obviously Lack Observability.",
+        "yolo: The deployment strategy of champions (and unemployment).",
+        "YOLO-driven development: Push to main, hope for the best, update resume.",
+        "yolo: That's not a deployment strategy, that's a cry for help.",
+        "YOLO: Yielding Output, Losing Oversight. Classic."
+      ]
+    },
+    "bruh": {
+      "responses": [
+        "bruh: The sound a developer makes when they find a console.log in production.",
+        "bruh: When you realize the bug was a typo. It's always a typo.",
+        "bruh: The universal expression for 'I can't believe this code works.'",
+        "bruh: What your code reviewer says before adding 47 comments.",
+        "bruh: The emotional state between 'it compiles' and 'it works correctly.'",
+        "bruh moment: When you've been debugging for 4 hours and the fix is one character."
+      ]
+    }
+  },
+  "meta": {
+    "version": 1,
+    "humor_sources": ["star-wars", "portal", "monty-python", "hitchhikers", "office-space", "it-crowd", "silicon-valley", "xkcd", "computing", "programming", "back-to-the-future", "spaceballs", "mst3k"]
+  }
+}
