@@ -2,7 +2,7 @@
 ---
 
 <!-- Command bar overlay — hidden by default -->
-<div id="command-bar" class="cmd" role="dialog" aria-label="Command terminal" aria-modal="true" hidden>
+<div id="command-bar" class="cmd" role="dialog" aria-label="Command terminal" aria-modal="true">
   <div class="cmd__output" id="cmd-output" role="log" aria-live="polite"></div>
   <div class="cmd__input-row">
     <label class="cmd__prompt" for="cmd-input">
@@ -24,10 +24,10 @@
 
 <style>
   .cmd {
+    display: none;
     position: fixed;
     inset: 0;
     z-index: 9000;
-    display: flex;
     flex-direction: column;
     background: var(--bg-base);
     opacity: 0.97;
@@ -35,8 +35,8 @@
     font-size: var(--text-sm);
   }
 
-  .cmd[hidden] {
-    display: none;
+  .cmd--open {
+    display: flex;
   }
 
   .cmd__output {
@@ -484,7 +484,7 @@
   function open() {
     if (isOpen) return;
     isOpen = true;
-    bar.hidden = false;
+    bar.classList.add('cmd--open');
     input.focus();
     document.dispatchEvent(new CustomEvent('terminal:open'));
   }
@@ -492,7 +492,7 @@
   function close() {
     if (!isOpen) return;
     isOpen = false;
-    bar.hidden = true;
+    bar.classList.remove('cmd--open');
     input.blur();
     document.dispatchEvent(new CustomEvent('terminal:close'));
   }
